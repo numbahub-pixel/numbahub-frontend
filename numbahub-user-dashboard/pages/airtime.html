@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airtime — NumbaHub</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<div class="app">
+
+<div id="sidebar"></div>
+  
+
+  <div class="overlay"></div>
+  <div class="main">
+    
+<header class="topbar">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <button class="icon-button mobile-menu" data-menu aria-label="Open menu"><i data-lucide="menu"></i></button>
+    <!-- <div>
+      <div class="page-kicker">Airtime</div>
+      <h1 class="page-title">Airtime</h1> 
+    </div> -->
+  </div>
+  <div class="top-actions">
+    <button class="icon-button"><i data-lucide="headphones"></i></button>
+    <button class="icon-button"><i data-lucide="bell"></i></button>
+    <div class="profile">
+      <div class="avatar">BA</div>
+      <div class="profile-info">
+        <strong>Busari Abdulsalam<br>Damilola</strong>
+        <span>user@example.com</span>
+      </div>
+      <span style="color:#8792a3"><i data-lucide="chevron-down"></i></span>
+    </div>
+  </div>
+</header>
+
+    <main class="container">
+      
+<div class="page-heading"><h2>Airtime</h2><p>Buy airtime for supported networks.</p></div>
+<div class="card">
+  <div class="form-grid">
+    <div class="field"><label>Network</label><select class="select"><option>Select network</option><option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option></select></div>
+    <div class="field"><label>Phone number</label><input class="input" placeholder="080..."></div>
+    <div class="field"><label>Amount</label><input class="input" placeholder="₦1,000"></div>
+  </div>
+  <button class="blue-button" style="margin-top:20px;">Continue</button>
+</div>
+
+    </main>
+  </div>
+</div>
+<script src="../assets/js/main.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../js/sidebar.js"></script>
+<script>if (window.lucide) lucide.createIcons();</script>
+</body>
+</html>

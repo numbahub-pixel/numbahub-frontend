@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — NumbaHub</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+<div class="app">
+  
+<div id="sidebar"></div>
+
+  <div class="overlay"></div>
+  <div class="main">
+    
+<header class="topbar">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <button class="icon-button mobile-menu" data-menu aria-label="Open menu"><i data-lucide="menu"></i></button>
+    <div>
+      <div class="page-kicker">Settings</div>
+      <h1 class="page-title">Settings</h1>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-button"><i data-lucide="headphones"></i></button>
+    <button class="icon-button"><i data-lucide="bell"></i></button>
+    <div class="profile">
+      <div class="avatar">BA</div>
+      <div class="profile-info">
+        <strong>Busari Abdulsalam<br>Damilola</strong>
+        <span>user@example.com</span>
+      </div>
+      <span style="color:#8792a3"><i data-lucide="chevron-down"></i></span>
+    </div>
+  </div>
+</header>
+
+    <main class="container">
+      
+<div class="page-heading"><h2>Settings</h2><p>Manage your account, security and preferences.</p></div>
+<div class="settings-layout">
+  <div class="card settings-menu">
+    <button class="active">Profile</button><button>Security</button><button>Notifications</button><button>Billing</button>
+  </div>
+  <div class="card">
+    <h3 style="margin:0;font-size:17px;">Profile information</h3>
+    <div class="settings-fields" style="margin-top:22px;">
+      <div class="field"><label>First name</label><input class="input" value="Busari"></div>
+      <div class="field"><label>Last name</label><input class="input" value="Abdulsalam Damilola"></div>
+      <div class="field full"><label>Email</label><input class="input" value="user@example.com"></div>
+      <div class="field"><label>Phone number</label><input class="input" placeholder="+234..."></div>
+      <div class="field"><label>Country</label><select class="select"><option>Nigeria</option></select></div>
+    </div>
+    <button class="blue-button" data-action="save" style="margin-top:22px;">Save changes</button>
+  </div>
+</div>
+
+    </main>
+  </div>
+</div>
+<script src="../assets/js/main.js"></script>
+<script>if (window.lucide) lucide.createIcons();</script>
+</body>
+</html>

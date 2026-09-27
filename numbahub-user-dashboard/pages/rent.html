@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rent — NumbaHub</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+<div class="app">
+  
+<div id="sidebar"></div>
+
+  <div class="overlay"></div>
+  <div class="main">
+    
+<header class="topbar">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <button class="icon-button mobile-menu" data-menu aria-label="Open menu"><i data-lucide="menu"></i></button>
+    <div>
+      <div class="page-kicker">Rent</div>
+      <h1 class="page-title">Rent</h1>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-button"><i data-lucide="headphones"></i></button>
+    <button class="icon-button"><i data-lucide="bell"></i></button>
+    <div class="profile">
+      <div class="avatar">BA</div>
+      <div class="profile-info">
+        <strong>Busari Abdulsalam<br>Damilola</strong>
+        <span>user@example.com</span>
+      </div>
+      <span style="color:#8792a3"><i data-lucide="chevron-down"></i></span>
+    </div>
+  </div>
+</header>
+
+    <main class="container">
+      
+<div class="page-heading"><h2>Rent Numbers</h2><p>Rent a dedicated virtual number for longer-term use.</p></div>
+<div class="card">
+  <div class="form-grid">
+    <div class="field"><label>Country</label><input class="input" placeholder="Search country"></div>
+    <div class="field"><label>Duration</label><select class="select"><option>Select duration</option><option>1 day</option><option>7 days</option><option>30 days</option></select></div>
+  </div>
+  <button class="blue-button" style="margin-top:20px;">Search numbers</button>
+  <div class="empty"><div><div class="empty-icon"><i data-lucide="phone"></i></div><strong>No rental number</strong><p>Search for a country and duration to see available numbers.</p></div></div>
+</div>
+
+    </main>
+  </div>
+</div>
+<script src="../assets/js/main.js"></script>
+<script>if (window.lucide) lucide.createIcons();</script>
+</body>
+</html>
