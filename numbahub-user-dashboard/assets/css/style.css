@@ -140,55 +140,6 @@ a { text-decoration: none; color: inherit; }
   border-radius: 999px;
 }
 
-.sidebar-promo {
-  margin: 0 20px 20px;
-  border-radius: 16px;
-  background: var(--brand);
-  color: #fff;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.sidebar-promo:before,
-.sidebar-promo:after {
-  content: "";
-  position: absolute;
-  border: 1px solid rgba(255,255,255,.13);
-  border-radius: 50%;
-}
-
-.sidebar-promo:before {
-  width: 130px;
-  height: 130px;
-  right: -55px;
-  top: -55px;
-}
-
-.sidebar-promo:after {
-  width: 90px;
-  height: 90px;
-  right: -30px;
-  top: -35px;
-}
-
-.sidebar-promo .crown {
-  font-size: 25px;
-  margin-bottom: 8px;
-}
-
-.sidebar-promo strong {
-  display: block;
-  font-size: 14px;
-}
-
-.sidebar-promo p {
-  margin: 6px 0 0;
-  color: #dbeafe;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
 .main {
   margin-left: 290px;
   min-height: 100vh;
@@ -205,6 +156,12 @@ a { text-decoration: none; color: inherit; }
   position: sticky;
   top: 0;
   z-index: 50;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 290px; /* sidebar width */
+  z-index: 50;
+
 }
 
 .page-kicker {
@@ -282,6 +239,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .balance-card {
+  margin-top: 90px;
   min-height: 158px;
   background: var(--brand);
   border-radius: 15px;
@@ -320,6 +278,8 @@ a { text-decoration: none; color: inherit; }
   border-radius: 10px;
   padding: 13px 20px;
   font-weight: 500;
+  display: grid;
+  width: 100%;
 }
 
 .service-grid {
@@ -452,11 +412,12 @@ a { text-decoration: none; color: inherit; }
 }
 
 .page-heading {
+  margin-top: 90px;
   margin-bottom: 22px;
 }
 
 .page-heading h2 {
-  margin: 0;
+  margin-top: 0px;
   font-size: 25px;
 }
 
@@ -468,8 +429,8 @@ a { text-decoration: none; color: inherit; }
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 24px;
 }
 
 .field label {
@@ -659,7 +620,7 @@ th {
 
 @media (max-width: 800px) {
   .container { padding: 20px; }
-  .topbar { height: 82px; padding: 0 20px; }
+  .topbar { height: 82px; padding: 0 20px; left: 0; right: 0; width: 100%; }
   .profile-info, .profile .chevron { display: none; }
   .balance-card { padding: 25px; align-items: flex-start; flex-direction: column; gap: 20px; }
   .service-grid { grid-template-columns: repeat(2, 1fr); }
