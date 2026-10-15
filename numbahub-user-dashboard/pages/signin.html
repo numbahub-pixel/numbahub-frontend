@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Account | NumbaHub</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50">
+
+    <main class="grid min-h-screen lg:grid-cols-2">
+
+        <!-- Left branding panel -->
+        <section
+            class="hidden bg-gradient-to-br
+                   from-slate-950 via-blue-950 to-blue-700
+                   p-12 text-white lg:flex lg:flex-col
+                   lg:justify-between"
+        >
+            <a href="login.html" class="text-2xl font-bold">
+                Numba<span class="text-blue-400">Hub</span>
+            </a>
+
+            <div class="max-w-lg">
+                <p class="text-sm font-semibold uppercase
+                          tracking-[0.25em] text-blue-300">
+                    Get started today
+                </p>
+
+                <h1 class="mt-5 text-5xl font-bold leading-tight">
+                    Make room for
+                    <span class="block text-blue-400">
+                        more possibilities.
+                    </span>
+                </h1>
+
+                <p class="mt-6 leading-7 text-slate-300">
+                    Create your account and bring your
+                    digital tasks together in one place.
+                </p>
+
+                <!-- Benefits -->
+                <ul class="mt-10 space-y-5 text-sm text-slate-200">
+                    <li>✓ Simple and quick setup</li>
+                    <li>✓ One connected workspace</li>
+                    <li>✓ A dashboard designed around you</li>
+                </ul>
+            </div>
+
+            <p class="text-sm text-slate-400">
+                © 2026 NumbaHub. All rights reserved.
+            </p>
+        </section>
+
+        <!-- Registration panel -->
+        <section
+            class="flex min-h-screen items-center justify-center
+                   bg-white px-6 py-10 sm:px-12"
+        >
+            <div class="w-full max-w-md">
+
+                <!-- Mobile logo -->
+                <a
+                    href="login.html"
+                    class="mb-8 block text-2xl font-bold
+                           text-slate-900 lg:hidden"
+                >
+                    Numba<span class="text-blue-600">Hub</span>
+                </a>
+
+                <!-- Heading -->
+                <div class="mb-7">
+                    <p class="text-sm font-semibold uppercase
+                              tracking-widest text-blue-600">
+                        Create your account
+                    </p>
+
+                    <h2 class="mt-3 text-3xl font-bold
+                               tracking-tight text-slate-900">
+                        Join NumbaHub
+                    </h2>
+
+                    <p class="mt-3 text-sm leading-6 text-slate-500">
+                        Enter your details to get started.
+                    </p>
+                </div>
+
+                <!-- Sign-up form -->
+                <form action="#" method="post" class="space-y-4">
+
+                    <!-- First and last name -->
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <div>
+                            <label
+                                for="firstName"
+                                class="mb-2 block text-sm
+                                       font-medium text-slate-700"
+                            >
+                                First name
+                            </label>
+
+                            <input
+                                id="firstName"
+                                name="firstName"
+                                type="text"
+                                autocomplete="given-name"
+                                placeholder="First name"
+                                required
+                                class="w-full rounded-xl border
+                                       border-slate-200 px-4 py-3
+                                       text-sm outline-none
+                                       focus:border-blue-500
+                                       focus:ring-4 focus:ring-blue-100"
+                            >
+                        </div>
+
+                        <div>
+                            <label
+                                for="lastName"
+                                class="mb-2 block text-sm
+                                       font-medium text-slate-700"
+                            >
+                                Last name
+                            </label>
+
+                            <input
+                                id="lastName"
+                                name="lastName"
+                                type="text"
+                                autocomplete="family-name"
+                                placeholder="Last name"
+                                required
+                                class="w-full rounded-xl border
+                                       border-slate-200 px-4 py-3
+                                       text-sm outline-none
+                                       focus:border-blue-500
+                                       focus:ring-4 focus:ring-blue-100"
+                            >
+                        </div>
+
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label
+                            for="email"
+                            class="mb-2 block text-sm
+                                   font-medium text-slate-700"
+                        >
+                            Email address
+                        </label>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="you@example.com"
+                            required
+                            class="w-full rounded-xl border
+                                   border-slate-200 px-4 py-3
+                                   text-sm outline-none
+                                   focus:border-blue-500
+                                   focus:ring-4 focus:ring-blue-100"
+                        >
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label
+                            for="password"
+                            class="mb-2 block text-sm
+                                   font-medium text-slate-700"
+                        >
+                            Password
+                        </label>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="new-password"
+                            minlength="8"
+                            placeholder="At least 8 characters"
+                            required
+                            class="w-full rounded-xl border
+                                   border-slate-200 px-4 py-3
+                                   text-sm outline-none
+                                   focus:border-blue-500
+                                   focus:ring-4 focus:ring-blue-100"
+                        >
+
+                        <p class="mt-2 text-xs text-slate-400">
+                            Use at least 8 characters.
+                        </p>
+                    </div>
+
+                    <!-- Confirm password -->
+                    <div>
+                        <label
+                            for="confirmPassword"
+                            class="mb-2 block text-sm
+                                   font-medium text-slate-700"
+                        >
+                            Confirm password
+                        </label>
+
+                        <input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            autocomplete="new-password"
+                            placeholder="Enter your password again"
+                            required
+                            class="w-full rounded-xl border
+                                   border-slate-200 px-4 py-3
+                                   text-sm outline-none
+                                   focus:border-blue-500
+                                   focus:ring-4 focus:ring-blue-100"
+                        >
+                    </div>
+
+                    <!-- Terms and conditions -->
+                    <label class="flex items-start gap-3 py-2
+                                  text-sm leading-6 text-slate-600">
+
+                        <input
+                            type="checkbox"
+                            name="terms"
+                            required
+                            class="mt-1 h-4 w-4 shrink-0
+                                   accent-blue-600"
+                        >
+
+                        <span>
+                            I agree to the
+                            <a href="#"
+                               class="font-medium text-blue-600">
+                                Terms of Service
+                            </a>
+                            and
+                            <a href="#"
+                               class="font-medium text-blue-600">
+                                Privacy Policy
+                            </a>.
+                        </span>
+                    </label>
+
+                    <!-- Submit -->
+                    <button
+                        type="submit"
+                        class="w-full rounded-xl bg-blue-600
+                               px-4 py-3.5 font-semibold
+                               text-white shadow-lg
+                               shadow-blue-600/20
+                               transition hover:bg-blue-700
+                               focus:outline-none
+                               focus:ring-4 focus:ring-blue-200"
+                    >
+                        Create account →
+                    </button>
+
+                </form>
+
+                <!-- Login link -->
+                <p class="mt-7 text-center text-sm text-slate-500">
+                    Already have an account?
+
+                    <a
+                        href="login.html"
+                        class="font-semibold text-blue-600
+                               hover:text-blue-700"
+                    >
+                        Log in
+                    </a>
+                </p>
+
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
