@@ -9,32 +9,50 @@
 </head>
 <body>
 <div class="app">
-  
-<div id="sidebar"></div>
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
   <div class="main">
-
     <main class="container">
-      
-<div class="page-heading"><h2>Transaction History</h2><p>View your recent account activity.</p></div>
-<div class="card">
-  <div class="toolbar"><input class="input" data-search placeholder="Search transactions..."><select class="select" style="max-width:180px;"><option>All statuses</option><option>Successful</option><option>Pending</option><option>Failed</option></select></div>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>Reference</th><th>Service</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
-      <tbody>
-        <tr data-searchable><td>#NU-00001</td><td>Receive SMS</td><td>$0.00</td><td><span class="status success">Successful</span></td><td>—</td></tr>
-        <tr data-searchable><td>#NU-00002</td><td>eSIM</td><td>$0.00</td><td><span class="status pending">Pending</span></td><td>—</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
+      <div class="page-heading"><h2>Transaction History</h2><p>View your recent account activity.</p></div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Reference</th><th>Service</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody id="historyTableBody">
+              <tr><td colspan="5" style="text-align: center;">Loading transactions...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </main>
   </div>
 </div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/api.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const tbody = document.getElementById("historyTableBody");
+    try {
+      const data = await apiFetch("/history");
+      if (data.transactions.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">No transactions yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.transactions.map(tx => `
+        <tr>
+          <td>${tx.reference}</td>
+          <td style="text-transform:capitalize;">${tx.service.replace("_", " ")}</td>
+          <td>₦${tx.amount.toLocaleString()}</td>
+          <td><span class="status ${tx.status === 'successful' ? 'success' : tx.status === 'pending' ? 'pending' : 'failed'}">${tx.status}</span></td>
+          <td>${new Date(tx.createdAt).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red;">Failed to load. Is the backend running?</td></tr>`;
+    }
+  });
+</script>
 <script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

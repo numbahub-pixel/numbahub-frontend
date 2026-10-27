@@ -9,25 +9,272 @@
 </head>
 <body>
 <div class="app">
-  
-<div id="sidebar"></div>
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
-
-
     <main class="container">
-      
-<div class="page-heading">
-  <h2>Engagement Hub</h2>
-  <p>Tools and rewards for active NumbaHub users.</p>
-</div>
+      <div class="page-heading text-center" style="margin-bottom: 32px;">
+        <h2 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <i data-lucide="rocket" style="color: var(--brand); width: 28px; height: 28px;"></i> Engagement Hub
+        </h2>
+        <p>Boost your social media presence with real, high-quality engagement.</p>
+      </div>
 
+      <div class="premium-card">
+        
+        <!-- Service Dropdown -->
+        <div class="premium-form-group">
+          <label><i data-lucide="layers" style="width: 16px; color: var(--brand);"></i> Select Service</label>
+          <div class="input-wrapper">
+            <i data-lucide="layout-grid" class="input-icon"></i>
+            <select class="premium-select" id="serviceSelect">
+              <option value="">Loading available services...</option>
+            </select>
+          </div>
+        </div>
 
+        <!-- Target Link -->
+        <div class="premium-form-group">
+          <label><i data-lucide="link" style="width: 16px; color: var(--brand);"></i> Target Link</label>
+          <div class="input-wrapper">
+            <i data-lucide="link-2" class="input-icon"></i>
+            <input class="premium-input" id="targetLink" type="url" placeholder="https://instagram.com/p/...">
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="premium-form-group">
+          <label><i data-lucide="hash" style="width: 16px; color: var(--brand);"></i> Quantity</label>
+          <div class="input-wrapper">
+            <i data-lucide="hash" class="input-icon"></i>
+            <input class="premium-input" id="quantityInput" type="number" placeholder="Enter quantity">
+          </div>
+          <p id="quantityHint" class="muted" style="font-size: 12px; margin-top: 8px; padding-left: 4px;"></p>
+        </div>
+
+        <!-- Live Price Calculation -->
+        <div id="priceBox" class="price-receipt hidden">
+          <div>
+            <div class="price-receipt-label">Total Charge</div>
+            <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Deducted from wallet</div>
+          </div>
+          <div id="totalCost" class="price-receipt-value">₦0.00</div>
+        </div>
+
+        <div id="formError" class="hidden text-red-500" style="font-size: 14px; margin-top: 16px; text-align: center;"></div>
+
+        <button class="btn-premium" id="orderBtn">
+          Proceed to Payment <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
     </main>
   </div>
 </div>
+
+<!-- 🟢 CONFIRMATION MODAL -->
+<div id="confirmModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <div style="width: 60px; height: 60px; background: #eff6ff; color: var(--brand); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px;">
+      <i data-lucide="shield-check" style="width: 30px; height: 30px;"></i>
+    </div>
+    <h3>Confirm Order</h3>
+    <p>Please review your order details below.</p>
+    
+    <div style="text-align: left; background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border);">
+      <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Service</div>
+      <div style="font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text);" id="modalServiceName">-</div>
+      
+      <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Target Link</div>
+      <div style="font-size: 14px; font-weight: 500; word-break: break-all; margin-bottom: 16px; color: var(--brand);" id="modalLink">-</div>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 16px;">
+        <span style="font-size: 14px; font-weight: 600; color: var(--text);">Total Charge:</span>
+        <span style="font-size: 22px; font-weight: 800; color: var(--brand);" id="modalPrice">₦0.00</span>
+      </div>
+    </div>
+
+    <div id="modalError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px;"></div>
+    
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelOrderBtn">Cancel</button>
+      <button class="btn-pay" id="confirmOrderBtn">Confirm & Pay</button>
+    </div>
+  </div>
+</div>
+
+<!-- 🟢 SUCCESS MODAL (Replaces alert) -->
+<div id="successModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <div style="width: 60px; height: 60px; background: #dcfce7; color: #166534; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px; font-size: 24px;">
+      ✓
+    </div>
+    <h3>Order Placed!</h3>
+    <p>Your engagement order is now being processed. You can track its status in your history.</p>
+    
+    <button class="btn-pay" style="width: 100%;" onclick="window.location.href='history.html'">
+      Go to History
+    </button>
+  </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
-<script>if (window.lucide) lucide.createIcons();</script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const serviceSelect = document.getElementById("serviceSelect");
+    const linkInput = document.getElementById("targetLink");
+    const qtyInput = document.getElementById("quantityInput");
+    const qtyHint = document.getElementById("quantityHint");
+    const priceBox = document.getElementById("priceBox");
+    const totalCostText = document.getElementById("totalCost");
+    const formError = document.getElementById("formError");
+    const orderBtn = document.getElementById("orderBtn");
+    
+    const confirmModal = document.getElementById("confirmModal");
+    const modalServiceName = document.getElementById("modalServiceName");
+    const modalLink = document.getElementById("modalLink");
+    const modalPrice = document.getElementById("modalPrice");
+    const modalError = document.getElementById("modalError");
+    
+    let allServices = [];
+    const EXCHANGE_RATE = 1500; // Frontend calculation (matches backend)
+
+    // 1. Fetch Services from Backend
+    try {
+      const data = await apiFetch("/engagement/services");
+      allServices = data.services || [];
+      
+      if (allServices.length === 0) {
+        serviceSelect.innerHTML = `<option value="">No services available right now.</option>`;
+        return;
+      }
+
+      // Populate Dropdown
+      serviceSelect.innerHTML = `<option value="">-- Choose a service --</option>` + 
+        allServices.map(s => `
+          <option value="${s.service}" data-rate="${s.rate}" data-min="${s.min}" data-max="${s.max}">
+            ${s.name} (Min: ${s.min} | Max: ${s.max})
+          </option>
+        `).join('');
+
+    } catch (error) {
+      serviceSelect.innerHTML = `<option value="">Failed to load services.</option>`;
+      formError.textContent = error.message;
+      formError.classList.remove("hidden");
+    }
+
+    // 2. Live Price Calculation Function
+    const calculatePrice = () => {
+      const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+      const rate = Number(selectedOption.getAttribute("data-rate") || 0);
+      const qty = Number(qtyInput.value);
+
+      if (rate > 0 && qty > 0) {
+        const costUsd = (rate / 1000) * qty;
+        const costNgn = Math.round(costUsd * EXCHANGE_RATE * 100) / 100;
+        totalCostText.textContent = `₦${costNgn.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`;
+        priceBox.classList.remove("hidden");
+        return costNgn;
+      } else {
+        priceBox.classList.add("hidden");
+        return 0;
+      }
+    };
+
+    // 3. Handle Service Selection Change
+    serviceSelect.addEventListener("change", (e) => {
+      const selectedOption = e.target.options[e.target.selectedIndex];
+      const min = selectedOption.getAttribute("data-min");
+      const max = selectedOption.getAttribute("data-max");
+
+      if (min && max) {
+        qtyInput.min = min;
+        qtyInput.max = max;
+        qtyHint.textContent = `Allowed range: ${Number(min).toLocaleString()} - ${Number(max).toLocaleString()}`;
+        qtyInput.value = ""; // Clear previous quantity
+      } else {
+        qtyHint.textContent = "";
+      }
+      calculatePrice();
+    });
+
+    // 4. Handle Quantity Typing
+    qtyInput.addEventListener("input", calculatePrice);
+
+    // 5. Handle Proceed Button
+    orderBtn.addEventListener("click", () => {
+      formError.classList.add("hidden");
+      const serviceId = serviceSelect.value;
+      const link = linkInput.value.trim();
+      const qty = Number(qtyInput.value);
+
+      if (!serviceId || !link || !qty) {
+        formError.textContent = "Please fill in all fields correctly.";
+        formError.classList.remove("hidden");
+        return;
+      }
+
+      const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+      const min = Number(selectedOption.getAttribute("data-min"));
+      const max = Number(selectedOption.getAttribute("data-max"));
+
+      if (qty < min || qty > max) {
+        formError.textContent = `Quantity must be between ${min.toLocaleString()} and ${max.toLocaleString()}.`;
+        formError.classList.remove("hidden");
+        return;
+      }
+
+      // Populate Modal
+      modalServiceName.textContent = selectedOption.text.split(' (Min')[0];
+      modalLink.textContent = link;
+      modalPrice.textContent = totalCostText.textContent;
+      modalError.classList.add("hidden");
+      
+      confirmModal.classList.remove("hidden");
+    });
+
+    // 6. Handle Modal Close
+    document.getElementById("cancelOrderBtn").addEventListener("click", () => {
+      confirmModal.classList.add("hidden");
+    });
+
+    // 7. Execute Order
+    document.getElementById("confirmOrderBtn").addEventListener("click", async (e) => {
+      const btn = e.target;
+      const originalText = btn.textContent;
+      
+      btn.disabled = true;
+      btn.textContent = "Processing...";
+      modalError.classList.add("hidden");
+
+      try {
+        const payload = {
+          serviceId: serviceSelect.value,
+          link: linkInput.value.trim(),
+          quantity: Number(qtyInput.value)
+        };
+
+        await apiFetch("/engagement/order", {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+
+        confirmModal.classList.add("hidden");
+        
+        // Show Success Modal Instead of Alert
+        document.getElementById("successModal").classList.remove("hidden");
+        
+      } catch (err) {
+        modalError.textContent = err.message || "Failed to place order.";
+        modalError.classList.remove("hidden");
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+
+    if (window.lucide) lucide.createIcons();
+  });
+</script>
 </body>
 </html>

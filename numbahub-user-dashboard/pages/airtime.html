@@ -8,32 +8,65 @@
 </head>
 <body>
 <div class="app">
-
-<div id="sidebar"></div>
-  
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
   <div class="main">
-    
-
     <main class="container">
-      
-<div class="page-heading"><h2>Airtime</h2><p>Buy airtime for supported networks.</p></div>
-<div class="card">
-  <div class="form-grid">
-    <div class="field"><label>Network</label><select class="select"><option>Select network</option><option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option></select></div>
-    <div class="field"><label>Phone number</label><input class="input" placeholder="080..."></div>
-    <div class="field"><label>Amount</label><input class="input" placeholder="₦1,000"></div>
-  </div>
-  <button class="blue-button" style="margin-top:20px;">Continue</button>
-</div>
-
+      <div class="page-heading"><h2>Airtime</h2><p>Buy airtime for supported networks.</p></div>
+      <div class="card">
+        <div class="form-grid">
+          <div class="field">
+            <label>Network</label>
+            <select class="select" id="network">
+              <option value="MTN">MTN</option>
+              <option value="AIRTEL">Airtel</option>
+              <option value="GLO">Glo</option>
+              <option value="9MOBILE">9mobile</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Phone number</label>
+            <input class="input" id="phone" placeholder="080...">
+          </div>
+          <div class="field">
+            <label>Amount (₦)</label>
+            <input class="input" id="amount" type="number" placeholder="1000">
+          </div>
+        </div>
+        <button class="blue-button" id="buyBtn" style="margin-top:20px;">Continue</button>
+      </div>
     </main>
   </div>
 </div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/api.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
-<script src="../js/sidebar.js"></script>
-<script>if (window.lucide) lucide.createIcons();</script>
+<script>
+  document.getElementById("buyBtn").addEventListener("click", async () => {
+    const network = document.getElementById("network").value;
+    const phone = document.getElementById("phone").value;
+    const amount = document.getElementById("amount").value;
+
+    if (!phone || !amount) return alert("Please fill in all fields");
+
+    const btn = document.getElementById("buyBtn");
+    btn.textContent = "Processing...";
+    btn.disabled = true;
+
+    try {
+      await apiFetch("/airtime/buy", {
+        method: "POST",
+        body: JSON.stringify({ network, phone, amount: Number(amount) }),
+      });
+      alert("Airtime purchased successfully!");
+      window.location.href = "history.html";
+    } catch (err) {
+      alert(err.message || "Failed to purchase airtime.");
+    } finally {
+      btn.textContent = "Continue";
+      btn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>

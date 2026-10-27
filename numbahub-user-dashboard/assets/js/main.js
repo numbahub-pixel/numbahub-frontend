@@ -1,52 +1,83 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const sidebarHost = document.getElementById("sidebar");
-  const isPage = window.location.pathname.split("/").pop() !== "index.html" && !window.location.pathname.endsWith("/") && !window.location.pathname.endsWith("numbahub-dashboard");
-  const base = isPage ? "../" : "";
+  const isPage = window.location.pathname.includes("/pages/");
+  const base = isPage ? "../" : "./";
 
+  const setText = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+
+  // 1. Populate from cache instantly
+  const cachedUser = typeof getUser === "function" ? getUser() : null;
+  if (cachedUser) {
+    setText("headerName", cachedUser.firstName);
+    setText("profileEmail", cachedUser.email);
+    setText("avatarInitials", `${cachedUser.firstName?.[0] || ""}${cachedUser.lastName?.[0] || ""}`.toUpperCase());
+    setText("walletBalance", `₦${Number(cachedUser.walletBalance || 0).toLocaleString()}`);
+    
+    const profileName = document.getElementById("profileName");
+    if (profileName) profileName.innerHTML = `${cachedUser.firstName}<br>${cachedUser.lastName}`;
+  }
+
+  // 2. Fetch Sidebar HTML
   if (sidebarHost) {
     try {
-      const response = await fetch(`${base}components/sidebar.html`);
-      if (!response.ok) throw new Error(`Sidebar request failed: ${response.status}`);
-      sidebarHost.innerHTML = (await response.text()).replaceAll("__ROOT__", base);
+      const response = await fetch(`${base}components/sidebar.html`, { cache: "no-store" });
+      if (!response.ok) throw new Error("Sidebar component not found");
+      sidebarHost.innerHTML = await response.text();
+
+      // Re-apply data after HTML injection
+      if (cachedUser) {
+        setText("headerName", cachedUser.firstName);
+        setText("profileEmail", cachedUser.email);
+        setText("avatarInitials", `${cachedUser.firstName?.[0] || ""}${cachedUser.lastName?.[0] || ""}`.toUpperCase());
+        const profileName = document.getElementById("profileName");
+        if (profileName) profileName.innerHTML = `${cachedUser.firstName}<br>${cachedUser.lastName}`;
+      }
+
+      // Render Icons inside the sidebar
+      if (window.lucide) lucide.createIcons();
+
+      // 3. Background Sync (Check if token is valid & balance changed)
+      if (typeof apiFetch === "function") {
+        try {
+          const data = await apiFetch("/auth/me");
+          setUser(data.user);
+          setText("headerName", data.user.firstName);
+          setText("profileEmail", data.user.email);
+          setText("walletBalance", `₦${Number(data.user.walletBalance || 0).toLocaleString()}`);
+        } catch (err) {
+          console.warn("Background sync failed:", err.message);
+        }
+      }
+
+      // 4. Mobile Sidebar Toggle Logic (FIXED)
+      const menuBtn = document.querySelector("[data-menu]");
+      const overlay = document.querySelector(".overlay");
+      const sidebarElement = document.querySelector(".sidebar"); // Target the actual <aside>
+
+      if (menuBtn && overlay && sidebarElement) {
+        menuBtn.addEventListener("click", () => {
+          sidebarElement.classList.add("open");
+          overlay.classList.add("show");
+        });
+        overlay.addEventListener("click", () => {
+          sidebarElement.classList.remove("open");
+          overlay.classList.remove("show");
+        });
+      }
+
     } catch (error) {
-      console.error("Unable to load sidebar:", error);
-      sidebarHost.innerHTML = '<p style="padding:20px;color:#b42318">Sidebar could not be loaded. Run this project with VS Code Live Server.</p>';
+      console.error("Sidebar load error:", error);
     }
   }
 
-  if (window.lucide) lucide.createIcons();
-
-  const sidebar = document.querySelector(".sidebar");
-  const overlay = document.querySelector(".overlay");
-  const menuButton = document.querySelector("[data-menu]");
-
-  document.querySelectorAll("[data-route]").forEach(link => {
+  // 5. Active Link Highlighting
+  const current = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll("[data-route]").forEach((link) => {
     const route = link.dataset.route;
     link.href = base + route;
-    const current = window.location.pathname.split("/").pop() || "index.html";
     link.classList.toggle("active", route.endsWith(current));
-  });
-
-  menuButton?.addEventListener("click", () => {
-    sidebar?.classList.add("open");
-    overlay?.classList.add("show");
-  });
-  overlay?.addEventListener("click", () => {
-    sidebar?.classList.remove("open");
-    overlay?.classList.remove("show");
-  });
-  document.querySelectorAll("[data-close-menu]").forEach(el => el.addEventListener("click", () => {
-    sidebar?.classList.remove("open"); overlay?.classList.remove("show");
-  }));
-  document.querySelectorAll("[data-action]").forEach(button => button.addEventListener("click", () => {
-    const action = button.dataset.action;
-    if (action === "fund") alert("Wallet funding flow will be connected here.");
-    if (action === "save") alert("Settings saved.");
-    if (action === "buy") alert("Purchase flow will be connected here.");
-  }));
-  const search = document.querySelector("[data-search]");
-  search?.addEventListener("input", () => {
-    const query = search.value.toLowerCase().trim();
-    document.querySelectorAll("[data-searchable]").forEach(item => item.style.display = item.textContent.toLowerCase().includes(query) ? "" : "none");
   });
 });

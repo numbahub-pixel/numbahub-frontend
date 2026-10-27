@@ -3,115 +3,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rent — NumbaHub</title>
+  <title>SMS Activation — NumbaHub</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 <body>
 <div class="app">
-  
-<div id="sidebar"></div>
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
-
     <main class="container">
-      
-<div class="page-heading">
-  <h2>Rent Numbers</h2>
-  <p>Rent a dedicated virtual number for longer-term use.</p>
-</div>
-<div class="card">
-  <div class="form-grid">
-      <div class="field">
-        <label>Country</label>
-        <select class="select">
-          <option>Choose a country</option>
-          <option>Nigeria</option>
-          <option>United States</option>
-          <option>United Kingdom</option>
-        </select>
+      <div class="page-heading">
+        <h2>SMS Activation</h2>
+        <p>Receive SMS verification codes for WhatsApp, Telegram, and more.</p>
       </div>
-  </div>
-  <div class="form-grid">
-      <div class="field">
-        <label>Categoty</label>
-        <select class="select">
-          <option>All</option>
-          <option>Google</option>
-          <option>Telegram</option>
-          <option>WhatsApp</option>
-        </select>
+
+      <!-- Country Selector -->
+      <div class="premium-card" style="margin-bottom: 24px; padding: 24px;">
+        <label style="font-size: 14px; font-weight: 600; margin-bottom: 12px; display: block;">Select Country</label>
+        <div id="countryTabs" style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <div class="skeleton" style="width: 120px; height: 40px; border-radius: 8px; background: #e2e8f0;"></div>
+        </div>
       </div>
-  </div>
-  <!-- <div class="grid grid-cols-4 gap-6 mb-1">
 
-      <button
-        onclick="selectDuration('Hour', this)"
-        class="duration-btn h-[68px] rounded-xl border border-[#D9DEE7] text-[20px] text-[#111827] transition"
-      >
-        Hour
-      </button>
-
-      <button
-        onclick="selectDuration('Day', this)"
-        class="duration-btn h-[68px] rounded-xl border border-blue-500 bg-[#EAF2FF] text-[20px] text-[#3679F6] transition"
-      >
-        Day
-      </button>
-
-      <button
-        onclick="selectDuration('Week', this)"
-        class="duration-btn h-[68px] rounded-xl border border-[#D9DEE7] text-[20px] text-[#111827] transition"
-      >
-        Week
-      </button>
-
-      <button
-        onclick="selectDuration('Month', this)"
-        class="duration-btn h-[68px] rounded-xl border border-[#D9DEE7] text-[20px] text-[#111827] transition"
-      >
-        Month
-      </button>
-
-    </div> -->
-
-  <div class="form-grid">
-    <div class="field">
-      <label>Select Duration</label>
-      <select class="select">
-        <option>Select duration</option>
-        <option>1 day</option>
-        <option>7 days</option>
-        <option>30 days</option>
-      </select>
-    </div>
-  </div>
-  <div class="form-grid">
-    <div class="field">
-      <label>Cost</label>
-      <input class="input" placeholder="">
-    </div>
-  </div>
-
-  <button class="blue-button" style="margin-top:20px;">Search numbers</button>
-  <div class="empty">
-    <div>
-      <div class="empty-icon">
-        <i data-lucide="phone"></i>
+      <!-- Results Grid -->
+      <div class="grid-3" id="rentalGrid">
+        <!-- Skeletons -->
+        <div class="product-card" style="opacity: 0.5;"><div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div></div>
+        <div class="product-card" style="opacity: 0.5;"><div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div></div>
+        <div class="product-card" style="opacity: 0.5;"><div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div></div>
       </div>
-      <strong>No rental number</strong>
-      <p>Search for a country and duration to see available numbers.</p>
-    </div>
-  </div>
-</div>
-
     </main>
   </div>
 </div>
+
+<!-- 🟢 SUCCESS MODAL -->
+<div id="successModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <div style="width: 60px; height: 60px; background: #dcfce7; color: #166534; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px; font-size: 24px;">
+      ✓
+    </div>
+    <h3>Number Activated!</h3>
+    <p>Enter this number in the app to receive your code.</p>
+    
+    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px;">
+      <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Phone Number</div>
+      <div style="font-size: 24px; font-weight: 700; color: var(--brand); letter-spacing: 1px;" id="successPhone">+1 234 567 8900</div>
+      
+      <div style="font-size: 12px; color: var(--muted); margin-top: 16px; margin-bottom: 4px;">Valid Until</div>
+      <div style="font-size: 14px; font-weight: 600;" id="successExpiry">-</div>
+    </div>
+    
+    <button class="btn-pay" style="width: 100%;" onclick="window.location.href='history.html'">
+      View in History
+    </button>
+  </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
-<script>if (window.lucide) lucide.createIcons();</script>
+<script>
+  // Custom styles for Country Tabs
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .country-tab {
+      padding: 10px 20px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .country-tab:hover { border-color: var(--brand); }
+    .country-tab.active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+      box-shadow: 0 4px 10px -3px rgba(67, 137, 238, 0.4);
+    }
+  `;
+  document.head.appendChild(style);
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const countryTabs = document.getElementById("countryTabs");
+    const rentalGrid = document.getElementById("rentalGrid");
+    const successModal = document.getElementById("successModal");
+
+    // 1. Fetch Countries
+    try {
+      const data = await apiFetch("/rent/countries");
+      const countries = data.countries || [];
+      
+      if (countries.length === 0) {
+        countryTabs.innerHTML = `<p class="muted">No countries available.</p>`;
+        return;
+      }
+
+      countryTabs.innerHTML = countries.map(c => `
+        <button class="country-tab" data-code="${c.code}" onclick="loadPrices('${c.code}', this)">
+          ${c.name}
+        </button>
+      `).join('');
+
+      // Auto-load first country
+      const firstTab = countryTabs.querySelector(".country-tab");
+      if (firstTab) firstTab.click();
+
+    } catch (error) {
+      countryTabs.innerHTML = `<p class="text-red-500">Failed to load countries: ${error.message}</p>`;
+    }
+
+    // 2. Load Prices
+    window.loadPrices = async (countryCode, btnElement) => {
+      document.querySelectorAll(".country-tab").forEach(t => t.classList.remove("active"));
+      btnElement.classList.add("active");
+
+      rentalGrid.innerHTML = `
+        <div class="product-card" style="opacity: 0.5;"><div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div></div>
+        <div class="product-card" style="opacity: 0.5;"><div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div></div>
+        <div class="product-card" style="opacity: 0.5;"><div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div></div>
+      `;
+
+      try {
+        const data = await apiFetch(`/rent/prices?country=${countryCode}`);
+        const prices = data.prices || [];
+        
+        if (prices.length === 0) {
+          rentalGrid.innerHTML = `<p class="muted" style="grid-column: 1/-1;">No activations available for this country right now.</p>`;
+          return;
+        }
+
+        rentalGrid.innerHTML = prices.map(plan => `
+          <div class="product-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #eff6ff; color: var(--brand); display:grid; place-items:center;">
+                  <i data-lucide="message-square" style="width: 16px;"></i>
+                </div>
+                <h3 style="margin:0; font-size:16px;">${plan.serviceName}</h3>
+              </div>
+            </div>
+            
+            <div class="product-price" style="margin: 10px 0;">₦${plan.priceInNgn.toLocaleString()}</div>
+            <div class="muted" style="margin-bottom: 20px;">1-time activation</div>
+            
+            <button class="blue-button" style="width: 100%;" onclick="rentNumber('${plan.id}', '${countryCode}', '${plan.service}', ${plan.priceInNgn}, this)">
+              Activate Now
+            </button>
+          </div>
+        `).join('');
+        
+        if (window.lucide) lucide.createIcons();
+
+      } catch (error) {
+        rentalGrid.innerHTML = `<p class="text-red-500" style="grid-column: 1/-1;">Failed to load: ${error.message}</p>`;
+      }
+    };
+
+    // 3. Process Activation
+    window.rentNumber = async (priceId, countryCode, serviceCode, price, btnElement) => {
+      const originalText = btnElement.textContent;
+      btnElement.disabled = true;
+      btnElement.textContent = "Purchasing...";
+
+      try {
+        const response = await apiFetch("/rent/rent", {
+          method: "POST",
+          body: JSON.stringify({ countryCode, serviceCode, price })
+        });
+
+        document.getElementById("successPhone").textContent = response.rental.phoneNumber;
+        
+        const expiryTime = new Date(response.rental.expiresAt).toLocaleTimeString('en-GB', {
+          hour: '2-digit', minute: '2-digit'
+        });
+        document.getElementById("successExpiry").textContent = `Valid until ${expiryTime} today`;
+        
+        successModal.classList.remove("hidden");
+
+        const cachedUser = getUser();
+        if (cachedUser) {
+          cachedUser.walletBalance = response.walletBalance;
+          setUser(cachedUser);
+        }
+
+      } catch (err) {
+        alert(err.message || "Failed to purchase activation.");
+        btnElement.disabled = false;
+        btnElement.textContent = originalText;
+      }
+    };
+  });
+</script>
 </body>
 </html>

@@ -9,36 +9,70 @@
 </head>
 <body>
 <div class="app">
-  
-<div id="sidebar"></div>
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
   <div class="main">
-
     <main class="container">
+      <div class="page-heading"><h2>Settings</h2><p>Manage your account profile.</p></div>
       
-<div class="page-heading"><h2>Settings</h2><p>Manage your account, security and preferences.</p></div>
-<div class="settings-layout">
-  <div class="card settings-menu">
-    <button class="active">Profile</button><button>Security</button><button>Notifications</button><button>Billing</button>
-  </div>
-  <div class="card">
-    <h3 style="margin:0;font-size:17px;">Profile information</h3>
-    <div class="settings-fields" style="margin-top:22px;">
-      <div class="field"><label>First name</label><input class="input" value="Busari"></div>
-      <div class="field"><label>Last name</label><input class="input" value="Abdulsalam Damilola"></div>
-      <div class="field full"><label>Email</label><input class="input" value="user@example.com"></div>
-      <div class="field"><label>Phone number</label><input class="input" placeholder="+234..."></div>
-      <div class="field"><label>Country</label><select class="select"><option>Nigeria</option></select></div>
-    </div>
-    <button class="blue-button" data-action="save" style="margin-top:22px;">Save changes</button>
-  </div>
-</div>
-
+      <div class="settings-layout">
+        <div class="card settings-menu">
+          <button class="active">Profile</button>
+        </div>
+        
+        <div class="card">
+          <h3 style="margin:0;font-size:17px;">Profile information</h3>
+          <div class="settings-fields" style="margin-top:22px;">
+            <div class="field"><label>First name</label><input class="input" id="setFirstName"></div>
+            <div class="field"><label>Last name</label><input class="input" id="setLastName"></div>
+            <div class="field full"><label>Email (Cannot be changed)</label><input class="input" id="setEmail" disabled></div>
+            <div class="field"><label>Phone number</label><input class="input" id="setPhone" placeholder="+234..."></div>
+          </div>
+          <button class="blue-button" id="saveBtn" style="margin-top:22px;">Save changes</button>
+        </div>
+      </div>
     </main>
   </div>
 </div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/api.js"></script>
+<script>
+  // Load initial data
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const data = await apiFetch("/auth/me");
+      document.getElementById("setFirstName").value = data.user.firstName;
+      document.getElementById("setLastName").value = data.user.lastName;
+      document.getElementById("setEmail").value = data.user.email;
+      document.getElementById("setPhone").value = data.user.phone || "";
+    } catch (error) {
+      console.log("Failed to load profile");
+    }
+  });
+
+  // Save data
+  document.getElementById("saveBtn").addEventListener("click", async () => {
+    const btn = document.getElementById("saveBtn");
+    btn.textContent = "Saving...";
+
+    const firstName = document.getElementById("setFirstName").value;
+    const lastName = document.getElementById("setLastName").value;
+    const phone = document.getElementById("setPhone").value;
+
+    try {
+      await apiFetch("/auth/profile", {
+        method: "PUT",
+        body: JSON.stringify({ firstName, lastName, phone }),
+      });
+      alert("Profile updated successfully!");
+      window.location.reload();
+    } catch (err) {
+      alert(err.message || "Failed to update profile");
+    } finally {
+      btn.textContent = "Save changes";
+    }
+  });
+</script>
 <script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

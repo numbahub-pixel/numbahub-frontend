@@ -9,54 +9,205 @@
 </head>
 <body>
 <div class="app">
-  
-<div id="sidebar"></div>
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
-
     <main class="container">
-      
-<div class="page-heading">
-  <h2>Giftcards</h2>
-  <p>Buy supported digital gift cards.</p>
-</div>
-<div class="grid-3">
-<div class="product-card">
-  <h3>Amazon</h3>
-  <p class="muted">Digital gift card</p>
-  <button class="blue-button" data-action="buy" style="margin-top:20px;">Buy gift card</button>
-</div>
-<div class="product-card">
-  <h3>Apple</h3>
-  <p class="muted">Digital gift card</p>
-  <button class="blue-button" data-action="buy" style="margin-top:20px;">Buy gift card</button>
-</div>
-<div class="product-card">
-  <h3>Google Play</h3>
-  <p class="muted">Digital gift card</p>
-  <button class="blue-button" data-action="buy" style="margin-top:20px;">Buy gift card</button>
-</div>
-<div class="product-card">
-  <h3>Steam</h3>
-  <p class="muted">Digital gift card</p>
-  <button class="blue-button" data-action="buy" style="margin-top:20px;">Buy gift card</button>
-</div>
-<div class="product-card">
-  <h3>PlayStation</h3>
-  <p class="muted">Digital gift card</p>
-  <button class="blue-button" data-action="buy" style="margin-top:20px;">Buy gift card</button>
-</div><div class="product-card">
-  <h3>Xbox</h3>
-  <p class="muted">Digital gift card</p>
-  <button class="blue-button" data-action="buy" style="margin-top:20px;">Buy gift card</button>
-</div>
-</div>
+      <div class="page-heading">
+        <h2>Giftcards</h2>
+        <p>Buy global digital gift cards instantly.</p>
+      </div>
+
+      <!-- STEP 1: Countries -->
+      <div id="stepCountries">
+        <h3 class="muted" style="margin-bottom: 15px;">1. Select a Country</h3>
+        <div class="grid-3" id="countryGrid">Loading countries...</div>
+      </div>
+
+      <!-- STEP 2: Brands -->
+      <div id="stepBrands" style="display: none;">
+        <button class="blue-button" style="width:auto; padding: 8px 15px; margin-bottom: 20px;" onclick="resetFlow()">
+          ← Back to Countries
+        </button>
+        <h3 class="muted" style="margin-bottom: 15px;">2. Select a Brand</h3>
+        <div class="grid-3" id="brandGrid"></div>
+      </div>
+
+      <!-- STEP 3: Products -->
+      <div id="stepProducts" style="display: none;">
+        <button class="blue-button" style="width:auto; padding: 8px 15px; margin-bottom: 20px;" onclick="resetFlow()">
+          ← Back to Countries
+        </button>
+        <h3 class="muted" style="margin-bottom: 15px;">3. Select a Card</h3>
+        <div class="grid-3" id="productGrid"></div>
+      </div>
 
     </main>
   </div>
 </div>
+
+<!-- 🟢 GIFT CARD PURCHASE MODAL -->
+<div id="buyGcModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <h3>Confirm Purchase</h3>
+    <p>You are buying <strong id="gcConfirmName">Gift Card</strong>.</p>
+    
+    <div style="background: #f8fafc; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+      <div style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">Total Price</div>
+      <div style="font-size: 24px; font-weight: 700; color: var(--brand);" id="gcConfirmPrice">₦0.00</div>
+    </div>
+
+    <div style="text-align: left; margin-bottom: 20px;">
+      <label style="font-size: 13px; font-weight: 500; margin-bottom: 6px; display: block;">Recipient Email</label>
+      <input type="email" id="gcEmail" placeholder="Enter email for delivery" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
+    </div>
+
+    <div id="gcError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px;"></div>
+    
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelGcBtn">Cancel</button>
+      <button class="btn-pay" id="confirmGcBtn">Pay Now</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
-<script>if (window.lucide) lucide.createIcons();</script>
+<script>
+  let selectedGcData = null;
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const data = await apiFetch("/giftcard/countries");
+      const grid = document.getElementById("countryGrid");
+      grid.innerHTML = data.countries.map(c => `
+        <div class="product-card" style="cursor:pointer;" onclick="loadBrands('${c.code}')">
+          <div style="display:flex; gap:10px; align-items:center;">
+            <img src="${c.image}" style="width: 30px; border-radius: 4px;">
+            <h3>${c.name}</h3>
+          </div>
+        </div>
+      `).join('');
+    } catch (e) { 
+      document.getElementById("countryGrid").innerHTML = `<p style="color:red;">Failed to load: ${e.message}</p>`; 
+    }
+  });
+
+  window.resetFlow = () => {
+    document.getElementById("stepCountries").style.display = "block";
+    document.getElementById("stepBrands").style.display = "none";
+    document.getElementById("stepProducts").style.display = "none";
+  };
+
+  window.loadBrands = async (countryCode) => {
+    document.getElementById("stepCountries").style.display = "none";
+    document.getElementById("stepBrands").style.display = "block";
+    document.getElementById("stepProducts").style.display = "none";
+    const grid = document.getElementById("brandGrid");
+    grid.innerHTML = "Loading brands...";
+
+    try {
+      const data = await apiFetch(`/giftcard/brands/${countryCode}`);
+      grid.innerHTML = data.brands.map(b => `
+        <div class="product-card" style="cursor:pointer;" onclick="loadProducts('${b.id}')">
+          <img src="${b.image}" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px;">
+          <h3>${b.name}</h3>
+        </div>
+      `).join('');
+    } catch (e) { 
+      grid.innerHTML = `<p style="color:red; grid-column: 1/-1;">Failed to load brands: ${e.message}</p>`; 
+    }
+  };
+
+  window.loadProducts = async (operatorId) => {
+    document.getElementById("stepBrands").style.display = "none";
+    document.getElementById("stepProducts").style.display = "block";
+    const grid = document.getElementById("productGrid");
+    grid.innerHTML = "Loading cards...";
+
+    try {
+      const data = await apiFetch(`/giftcard/products/${operatorId}`);
+      
+      if (!data.products || data.products.length === 0) {
+        throw new Error("Giftcard not available for this brand right now.");
+      }
+
+      grid.innerHTML = data.products.map(p => `
+        <div class="product-card">
+          <h3>${p.name}</h3>
+          <div class="product-price">₦${p.ngn.toLocaleString()}</div>
+          <button class="blue-button" style="margin-top: 15px;" 
+            onclick="openBuyModal('${p.id}', '${operatorId}', ${p.ngn}, '${p.name}')">
+            Buy Card
+          </button>
+        </div>
+      `).join('');
+    } catch (e) { 
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: #fff; border-radius: 16px;">
+          <p style="color: #ef4444; font-weight: 600;">Oops!</p>
+          <p style="color: var(--muted); font-size: 14px;">${e.message}</p>
+          <button class="blue-button" style="margin: 20px auto 0;" onclick="resetFlow()">Go Back</button>
+        </div>
+      `; 
+    }
+  };
+
+  // Modal Logic
+  window.openBuyModal = (productId, operatorId, price, name) => {
+    selectedGcData = { productId, operatorId, price, name };
+    document.getElementById("gcConfirmName").textContent = name;
+    document.getElementById("gcConfirmPrice").textContent = `₦${price.toLocaleString()}`;
+    document.getElementById("gcEmail").value = "";
+    document.getElementById("gcError").classList.add("hidden");
+    document.getElementById("buyGcModal").classList.remove("hidden");
+  };
+
+  document.getElementById("cancelGcBtn").addEventListener("click", () => {
+    document.getElementById("buyGcModal").classList.add("hidden");
+    selectedGcData = null;
+  });
+
+  document.getElementById("confirmGcBtn").addEventListener("click", async (e) => {
+    const btn = e.target;
+    const email = document.getElementById("gcEmail").value.trim();
+    const errorEl = document.getElementById("gcError");
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errorEl.textContent = "Please enter a valid email address.";
+      errorEl.classList.remove("hidden");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Processing...";
+    errorEl.classList.add("hidden");
+
+    try {
+      await apiFetch("/giftcard/buy", {
+        method: "POST",
+        body: JSON.stringify({ 
+          productId: selectedGcData.productId, 
+          operatorId: selectedGcData.operatorId, 
+          amount: selectedGcData.price, 
+          email 
+        })
+      });
+      
+      document.getElementById("buyGcModal").classList.add("hidden");
+      alert("Giftcard purchased successfully! Check History for your redeem code.");
+      window.location.href = "history.html";
+    } catch (err) {
+      errorEl.textContent = err.message || "Failed to purchase gift card.";
+      errorEl.classList.remove("hidden");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Pay Now";
+    }
+  });
+
+  if (window.lucide) lucide.createIcons();
+</script>
 </body>
 </html>

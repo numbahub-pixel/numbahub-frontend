@@ -3,87 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Busari — NumbaHub</title>
+  <title>Dashboard — NumbaHub</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 <div class="app">
   
-<div id="sidebar"></div>
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
-
     <main class="container">
       
-<section class="balance-card">
-  <div>
-    <div class="balance-label">Available balance</div>
-    <div class="balance">$0.00 <span style="font-size:16px;color:#dbeafe;"><i data-lucide="eye"></i></span></div>
-  </div>
-  <button class="primary-button" data-action="fund"><i data-lucide="plus"></i> Fund wallet</button>
-</section>
+      <section class="balance-card">
+        <div>
+          <div class="balance-label">Available balance</div>
+          <div class="balance" id="walletBalance">₦0.00</div>
+        </div>
+        <button class="primary-button" id="fundWalletBtn">
+          <i data-lucide="plus"></i> Fund wallet
+        </button>
+      </section>
 
-<div class="quickaccess">
-  <p>Quick access</p>
-</div>
+      <div class="quickaccess">Quick access</div>
 
-<section class="service-grid">
-  <a class="service-item" href="pages/Referral.html">
-    <span class="service-icon icon-violet">
-      <i data-lucide="user-group"></i>
-    </span><span>Referral</span>
-  </a>
-  <a class="service-item" href="pages/airtime.html">
-    <span class="service-icon icon-blue">
-      <i data-lucide="phone"></i>
-    </span>
-    <span>Airtime</span>
-  </a>
-  <a class="service-item" href="pages/verification.html">
-    <span class="service-icon icon-orange">
-      <i data-lucide="shield-check"></i>
-    </span>
-    <span>Verifications</span>
-  </a>
-  <a class="service-item" href="pages/giftcards.html">
-    <span class="service-icon icon-green">
-      <i data-lucide="gift"></i>
-    </span>
-    <span>Giftcards</span>
-  </a>
-</section>
+      <section class="service-grid">
+        <a class="service-item" href="pages/Referral.html">
+          <span class="service-icon icon-violet"><i data-lucide="user-group"></i></span>
+          <span style="font-weight:500;">Referral</span>
+        </a>
+        <a class="service-item" href="pages/airtime.html">
+          <span class="service-icon icon-blue"><i data-lucide="phone"></i></span>
+          <span style="font-weight:500;">Airtime</span>
+        </a>
+        <a class="service-item" href="pages/verification.html">
+          <span class="service-icon icon-orange"><i data-lucide="shield-check"></i></span>
+          <span style="font-weight:500;">Verifications</span>
+        </a>
+        <a class="service-item" href="pages/giftcards.html">
+          <span class="service-icon icon-green"><i data-lucide="gift"></i></span>
+          <span style="font-weight:500;">Giftcards</span>
+        </a>
+      </section>
 
-<section class="two-column">
-  <div class="card">
-    <div class="card-header">
-      <h2 class="card-title">Rent numbers <span class="count">0</span></h2>
-      <a class="view-link" href="pages/rent.html">View all</a>
-    </div>
-    <div class="empty">
-      <div><div class="empty-icon"><i data-lucide="search"></i></div><strong>No rental number</strong><p>Your active rental numbers will appear here.</p></div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      <h2 class="card-title">eSIMs <span class="count">0</span></h2>
-      <a class="view-link" href="pages/esim.html">View all</a>
-    </div>
-    <div class="empty">
-      <div><div class="empty-icon"><i data-lucide="card-sim"></i></div><strong>No eSIM</strong><p>Your active eSIM plans will appear here.</p></div>
-    </div>
-  </div>
-</section>
+      <section class="two-column">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Rent numbers <span class="count">0</span></h2>
+            <a class="view-link" href="pages/rent.html">View all</a>
+          </div>
+          <div class="empty">
+            <div>
+              <div class="empty-icon"><i data-lucide="search"></i></div>
+              <strong>No rental number</strong>
+              <p>Your active rental numbers will appear here.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">eSIMs <span class="count">0</span></h2>
+            <a class="view-link" href="pages/esim.html">View all</a>
+          </div>
+          <div class="empty">
+            <div>
+              <div class="empty-icon"><i data-lucide="card-sim"></i></div>
+              <strong>No eSIM</strong>
+              <p>Your active eSIM plans will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </main>
   </div>
 </div>
+
+<!-- FUND WALLET MODAL -->
+<div id="fundModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <h3>Fund Wallet</h3>
+    <p>Enter the amount you want to add to your NumbaHub wallet.</p>
+    
+    <!-- Error Message Container -->
+    <div id="modalError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px;"></div>
+    
+    <div class="input-group">
+      <span>₦</span>
+      <input type="number" id="fundAmount" placeholder="Min 100" min="100">
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn-cancel" id="closeModalBtn">Cancel</button>
+      <button class="btn-pay" id="payKoraBtn">Pay with Kora</button>
+    </div>
+  </div>
+</div>
+
+<!-- Load API and main.js -->
+<script src="assets/js/api.js"></script>
 <script src="assets/js/main.js"></script>
 
+<!-- Dashboard Specific Script -->
 <script>
-    lucide.createIcons();
+  document.addEventListener("DOMContentLoaded", () => {
+    
+    const modal = document.getElementById("fundModal");
+    const fundBtn = document.getElementById("fundWalletBtn");
+    const closeBtn = document.getElementById("closeModalBtn");
+    const payBtn = document.getElementById("payKoraBtn");
+    const amountInput = document.getElementById("fundAmount");
+    const errorEl = document.getElementById("modalError");
+
+    // Only run if elements exist
+    if (fundBtn && modal) {
+      
+      fundBtn.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        amountInput.focus();
+        errorEl.classList.add("hidden");
+        amountInput.value = "";
+      });
+
+      closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+
+      payBtn.addEventListener("click", async () => {
+        errorEl.classList.add("hidden");
+        const amount = Number(amountInput.value);
+
+        if (!amount || amount < 100) {
+          errorEl.textContent = "Minimum funding is ₦100.";
+          errorEl.classList.remove("hidden");
+          return;
+        }
+
+        payBtn.disabled = true;
+        payBtn.textContent = "Initializing...";
+
+        try {
+          const data = await apiFetch("/wallet/fund", {
+            method: "POST",
+            body: JSON.stringify({ amount })
+          });
+
+          // Redirect to Kora Checkout
+          if (data.checkoutUrl) {
+            window.location.href = data.checkoutUrl;
+          } else {
+            throw new Error("No checkout URL returned.");
+          }
+        } catch (error) {
+          errorEl.textContent = error.message || "Failed to initialize payment.";
+          errorEl.classList.remove("hidden");
+          payBtn.disabled = false;
+          payBtn.textContent = "Pay with Kora";
+        }
+      });
+    }
+  });
 </script>
-<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>
