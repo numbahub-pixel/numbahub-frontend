@@ -8,35 +8,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (el) el.textContent = text;
   };
 
-  // 1. Populate from cache instantly
+  // 1. Fetch Live USD/NGN Exchange Rate
+  let currentRate = 1500; // Fallback default
+  try {
+    const rateData = await apiFetch("/currency/rate", { auth: false }); // auth:false because it's a public route
+    currentRate = rateData.rate || 1500;
+    console.log(`Live Rate Loaded: $1 = ₦${currentRate}`);
+  } catch (err) {
+    console.warn("Using fallback exchange rate:", err.message);
+  }
+
+  // Helper to format Wallet Balance to USD using the live rate
+  const formatBalance = (balanceInNgn) => {
+    const usdAmount = Number(balanceInNgn || 0) / currentRate;
+    return `$${usdAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
+  // 2. Populate from cache instantly (uses live rate)
   const cachedUser = typeof getUser === "function" ? getUser() : null;
   if (cachedUser) {
-    // 👈 Shows First + Last Name
     setText("headerName", `${cachedUser.firstName} ${cachedUser.lastName}`);
     setText("profileEmail", cachedUser.email);
     setText("avatarInitials", `${cachedUser.firstName?.[0] || ""}${cachedUser.lastName?.[0] || ""}`.toUpperCase());
-    setText("walletBalance", `₦${Number(cachedUser.walletBalance || 0).toLocaleString()}`);
+    
+    // 👈 Set Balance in USD
+    setText("walletBalance", formatBalance(cachedUser.walletBalance));
     
     const profileName = document.getElementById("profileName");
     if (profileName) profileName.innerHTML = `${cachedUser.firstName}<br>${cachedUser.lastName}`;
   }
 
-  // 2. Fetch Sidebar HTML
+  // 3. Fetch Sidebar HTML
   if (sidebarHost) {
     try {
       const response = await fetch(`${base}components/sidebar.html`, { cache: "no-store" });
       if (!response.ok) throw new Error("Sidebar component not found");
       sidebarHost.innerHTML = await response.text();
 
-      // 👈 SET THE LOGO PATH HERE (Pointing to the img folder)
+      // Set the Logo path
       const logoImg = document.getElementById('sidebarLogo');
       if (logoImg) {
         logoImg.src = `${base}img/NumbaHublogo.jpeg`;
-        
-        // Fallback: If the image is missing, hide it so the text still looks good
-        logoImg.onerror = () => {
-          logoImg.style.display = 'none';
-        };
+        logoImg.onerror = () => { logoImg.style.display = 'none'; };
       }
 
       // Re-apply data after HTML injection
@@ -48,24 +61,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (profileName) profileName.innerHTML = `${cachedUser.firstName}<br>${cachedUser.lastName}`;
       }
 
-      // Render Icons inside the sidebar
       if (window.lucide) lucide.createIcons();
 
-      // 3. Background Sync (Check if token is valid & balance changed)
+      // 4. Background Sync (Check if token is valid & balance changed)
       if (typeof apiFetch === "function") {
         try {
           const data = await apiFetch("/auth/me");
           setUser(data.user);
-          // 👈 Shows First + Last Name
           setText("headerName", `${data.user.firstName} ${data.user.lastName}`);
           setText("profileEmail", data.user.email);
-          setText("walletBalance", `₦${Number(data.user.walletBalance || 0).toLocaleString()}`);
+          
+          // 👈 Set Balance in USD with live rate
+          setText("walletBalance", formatBalance(data.user.walletBalance));
+          
         } catch (err) {
           console.warn("Background sync failed:", err.message);
         }
       }
 
-      // 4. Mobile Sidebar Toggle Logic
+      // 5. Mobile Sidebar Toggle Logic
       const menuBtn = document.querySelector("[data-menu]");
       const overlay = document.querySelector(".overlay");
       const sidebarElement = document.querySelector(".sidebar");
@@ -86,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 5. Active Link Highlighting
+  // 6. Active Link Highlighting
   const current = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll("[data-route]").forEach((link) => {
     const route = link.dataset.route;
