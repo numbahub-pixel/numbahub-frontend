@@ -25,6 +25,12 @@
           <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-900">Join NumbaHub</h2>
         </div>
 
+        <!-- 👈 REFERRAL BANNER -->
+        <div id="referralBanner" class="hidden mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <span>Referral Applied! You were invited by a friend.</span>
+        </div>
+
         <form id="signupForm" class="space-y-4" novalidate>
           <div id="formError" role="alert" aria-live="assertive"
                class="hidden rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"></div>
@@ -82,6 +88,15 @@
       const errorBox = document.getElementById("formError");
       const btn      = document.getElementById("submitBtn");
       const btnLabel = btn.textContent;
+      
+      // 👈 1. Grab the referral code from the URL (e.g., signup.html?ref=NU123)
+      const urlParams = new URLSearchParams(window.location.search);
+      const referredBy = urlParams.get('ref');
+      
+      // If a referral code exists, show the green banner
+      if (referredBy) {
+        document.getElementById("referralBanner").classList.remove("hidden");
+      }
 
       const showError = (msg) => {
         errorBox.textContent = msg;
@@ -121,8 +136,9 @@
         try {
           const data = await apiFetch("/auth/register", {
             method: "POST",
-            body: JSON.stringify({ firstName, lastName, email, password }),
-            auth: false, // no token on signup, don't auto-logout on 401
+            // 👈 2. Send the referral code to the backend
+            body: JSON.stringify({ firstName, lastName, email, password, referredBy }),
+            auth: false,
           });
 
           setToken(data.token);

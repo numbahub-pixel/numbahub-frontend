@@ -6,20 +6,180 @@
   <title>History — NumbaHub</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Premium Table Styles */
+    .table-container {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px -5px rgba(0,0,0,0.03);
+      overflow: hidden; /* Ensures the table corners are rounded */
+      margin-top: 20px;
+    }
+
+    .premium-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .premium-table th {
+      background: #f8fafc;
+      padding: 16px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748b;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .premium-table td {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    .premium-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .premium-table tr {
+      transition: background 0.2s ease;
+    }
+
+    .premium-table tr:hover {
+      background: #fcfdfd;
+    }
+
+    /* Service Badge Styles */
+    .service-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .service-icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .service-name {
+      font-weight: 600;
+      color: var(--text);
+      text-transform: capitalize;
+    }
+
+    .service-ref {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: monospace;
+      margin-top: 2px;
+    }
+
+    /* Status Pill Styles */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .status-pill.success { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .status-pill.pending { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .status-pill.failed { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Amount styling */
+    .amount-cell {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Date styling */
+    .date-cell {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Skeleton Loader */
+    .skeleton-row td {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .skeleton-box {
+      height: 16px;
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @media (max-width: 768px) {
+      .premium-table th:nth-child(3),
+      .premium-table td:nth-child(3),
+      .premium-table th:nth-child(5),
+      .premium-table td:nth-child(5) {
+        display: none; /* Hide Amount and Date on small screens to save space */
+      }
+    }
+  </style>
 </head>
 <body>
 <div class="app">
   <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
     <main class="container">
-      <div class="page-heading"><h2>Transaction History</h2><p>View your recent account activity.</p></div>
-      <div class="card">
+      <div class="page-heading" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2>Transaction History</h2>
+          <p>View your recent account activity and purchases.</p>
+        </div>
+        <!-- Optional: Add an export button if needed later -->
+        <button class="icon-button" title="Filter" onclick="alert('Filtering coming soon!')">
+          <i data-lucide="filter"></i>
+        </button>
+      </div>
+
+      <div class="table-container">
         <div class="table-wrap">
-          <table>
-            <thead><tr><th>Reference</th><th>Service</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+          <table class="premium-table">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Reference</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
             <tbody id="historyTableBody">
-              <tr><td colspan="5" style="text-align: center;">Loading transactions...</td></tr>
+              <!-- Skeleton Loader by default -->
+              <tr class="skeleton-row"><td><div class="skeleton-box" style="width: 60%;"></div></td><td><div class="skeleton-box" style="width: 80%;"></div></td><td><div class="skeleton-box" style="width: 50%;"></div></td><td><div class="skeleton-box" style="width: 40%;"></div></td><td><div class="skeleton-box" style="width: 70%;"></div></td></tr>
+              <tr class="skeleton-row"><td><div class="skeleton-box" style="width: 50%;"></div></td><td><div class="skeleton-box" style="width: 90%;"></div></td><td><div class="skeleton-box" style="width: 60%;"></div></td><td><div class="skeleton-box" style="width: 30%;"></div></td><td><div class="skeleton-box" style="width: 60%;"></div></td></tr>
+              <tr class="skeleton-row"><td><div class="skeleton-box" style="width: 70%;"></div></td><td><div class="skeleton-box" style="width: 70%;"></div></td><td><div class="skeleton-box" style="width: 40%;"></div></td><td><div class="skeleton-box" style="width: 50%;"></div></td><td><div class="skeleton-box" style="width: 80%;"></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -27,32 +187,117 @@
     </main>
   </div>
 </div>
+
 <script src="../assets/js/main.js"></script>
 <script src="../assets/js/api.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
     const tbody = document.getElementById("historyTableBody");
+
+    // Map services to premium icons and colors
+    function getServiceDetails(service) {
+      const map = {
+        'wallet_funding': { icon: 'wallet', color: '#059669', bg: '#ecfdf5' },
+        'esim': { icon: 'smartphone', color: '#2563eb', bg: '#eff6ff' },
+        'giftcard': { icon: 'gift', color: '#8b5cf6', bg: '#f5f3ff' },
+        'activation': { icon: 'message-square', color: '#d97706', bg: '#fffbeb' },
+        'engagement': { icon: 'rocket', color: '#e11d48', bg: '#fff1f2' },
+        'referral_cashout': { icon: 'users', color: '#0d9488', bg: '#f0fdfa' }
+      };
+      
+      const details = map[service] || { icon: 'activity', color: '#64748b', bg: '#f8fafc' };
+      // Format name (e.g., "wallet_funding" -> "Wallet Funding")
+      const name = service.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      
+      return { ...details, name };
+    }
+
     try {
       const data = await apiFetch("/history");
+      
       if (data.transactions.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">No transactions yet.</td></tr>`;
+        // Premium Empty State
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div style="text-align: center; padding: 60px 20px;">
+                <div style="width: 64px; height: 64px; background: #f8fafc; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px;">
+                  <i data-lucide="receipt" style="width: 32px; height: 32px; color: #94a3b8;"></i>
+                </div>
+                <h3 style="margin: 0 0 8px; font-size: 18px; color: var(--text);">No transactions yet</h3>
+                <p style="margin: 0 0 20px; color: var(--muted); font-size: 14px;">When you make a purchase or fund your wallet, it will appear here.</p>
+                <a href="../index.html" class="blue-button" style="display: inline-flex; text-decoration: none;">Go to Dashboard</a>
+              </div>
+            </td>
+          </tr>
+        `;
+        if (window.lucide) lucide.createIcons();
         return;
       }
 
-      tbody.innerHTML = data.transactions.map(tx => `
-        <tr>
-          <td>${tx.reference}</td>
-          <td style="text-transform:capitalize;">${tx.service.replace("_", " ")}</td>
-          <td>₦${tx.amount.toLocaleString()}</td>
-          <td><span class="status ${tx.status === 'successful' ? 'success' : tx.status === 'pending' ? 'pending' : 'failed'}">${tx.status}</span></td>
-          <td>${new Date(tx.createdAt).toLocaleDateString()}</td>
-        </tr>
-      `).join('');
+      // Render Transactions
+      tbody.innerHTML = data.transactions.map(tx => {
+        const s = getServiceDetails(tx.service);
+        
+        // Format Date nicely
+        const dateObj = new Date(tx.createdAt);
+        const formattedDate = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        const formattedTime = dateObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        
+        // Determine status class
+        let statusClass = 'pending';
+        if (tx.status === 'successful') statusClass = 'success';
+        if (tx.status === 'failed') statusClass = 'failed';
+
+        return `
+          <tr>
+            <td>
+              <div class="service-cell">
+                <div class="service-icon-wrapper" style="background: ${s.bg}; color: ${s.color};">
+                  <i data-lucide="${s.icon}" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div>
+                  <div class="service-name">${s.name}</div>
+                  <div class="service-ref">${tx.reference}</div>
+                </div>
+              </div>
+            </td>
+            <td style="font-family: monospace; font-size: 13px; color: #64748b;">
+              ${tx.reference.substring(0, 15)}...
+            </td>
+            <td class="amount-cell">
+              ₦${tx.amount.toLocaleString()}
+            </td>
+            <td>
+              <span class="status-pill ${statusClass}">
+                <span class="status-dot"></span>
+                ${tx.status}
+              </span>
+            </td>
+            <td class="date-cell">
+              <div style="font-weight: 500; color: var(--text);">${formattedDate}</div>
+              <div style="font-size: 12px;">${formattedTime}</div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Render the new Lucide icons
+      if (window.lucide) lucide.createIcons();
+
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red;">Failed to load. Is the backend running?</td></tr>`;
+      console.error("History Error:", err);
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 40px; color: #ef4444;">
+            <i data-lucide="alert-circle" style="width: 32px; height: 32px; margin-bottom: 10px;"></i>
+            <p>Failed to load transactions. Please check your connection.</p>
+          </td>
+        </tr>
+      `;
+      if (window.lucide) lucide.createIcons();
     }
   });
 </script>
-<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

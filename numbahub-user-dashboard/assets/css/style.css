@@ -325,3 +325,113 @@ a { text-decoration: none; color: inherit; }
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* =========================================
+   PREMIUM TOPBAR UPDATES
+   ========================================= */
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Support & Notification Icons */
+.top-icon-btn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.top-icon-btn:hover {
+  background: #f8fafc;
+  color: var(--brand);
+  border-color: #cbd5e1;
+}
+
+.top-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Profile Section */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px 6px 6px;
+  border-radius: 50px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile:hover {
+  background: #f8fafc;
+  border-color: var(--border);
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: var(--brand);
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.3;
+}
+
+.profile-info strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.profile-info span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.profile-chevron {
+  width: 16px;
+  height: 16px;
+  color: #94a3b8;
+  margin-left: 4px;
+}
+
+/* Responsive Hide for Mobile */
+@media (max-width: 768px) {
+  .profile-info, .profile-chevron { display: none; }
+  .profile { padding: 0; border: none; }
+  .top-icon-btn { display: none; } /* Hide support/bell on very small screens to save space */
+}
+
+/* =========================================
+   PREMIUM SIDEBAR LOGO
+   ========================================= */
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: cover; /* Keeps the image from stretching */
+  box-shadow: 0 4px 10px -2px rgba(0,0,0,0.1); /* Soft shadow */
+  border: 1px solid var(--border);
+}
+
+/* Fallback if the image is missing */
+.brand-logo[src=""] {
+  display: none;
+}

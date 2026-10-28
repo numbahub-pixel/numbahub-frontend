@@ -1,6 +1,7 @@
 <aside class="sidebar" id="mobileSidebar" aria-label="Main navigation">
   <div class="brand">
-    <div class="brand-mark"></div>
+    <!-- 👈 THE IMAGE TAG IS HERE -->
+    <img id="sidebarLogo" src="" alt="NumbaHub Logo" class="brand-logo">
     <div class="brand-name">NumbaHub</div>
   </div>
   <nav class="nav">
@@ -9,13 +10,15 @@
     <a class="nav-link" data-route="pages/rent.html" href="#"><i class="nav-icon" data-lucide="phone"></i><span>Rent</span></a>
     <a class="nav-link" data-route="pages/esim.html" href="#"><i class="nav-icon" data-lucide="card-sim"></i><span>eSIM</span></a>
     <a class="nav-link" data-route="pages/engagement.html" href="#"><i class="nav-icon" data-lucide="rocket"></i><span>Engagement Hub</span></a>
+    <a class="nav-link" data-route="pages/giftcards.html" href="#"><i class="nav-icon" data-lucide="gift"></i><span>Giftcards</span></a>
+    <a class="nav-link" data-route="pages/Referral.html" href="#"><i class="nav-icon" data-lucide="users"></i><span>Referral</span></a>
     <a class="nav-link" data-route="pages/history.html" href="#"><i class="nav-icon" data-lucide="history"></i><span>History</span></a>
     <a class="nav-link" data-route="pages/settings.html" href="#"><i class="nav-icon" data-lucide="settings"></i><span>Settings</span></a>
   </nav>
 </aside>
 
 <header class="topbar">
-  <div style="display:flex;align-items:center;gap:14px;">
+  <div style="display:flex; align-items:center; gap:14px;">
     <button class="icon-button mobile-menu" data-menu aria-label="Open menu">
       <i data-lucide="menu"></i>
     </button>
@@ -24,13 +27,22 @@
       <h1 class="page-title" id="headerName">User</h1>
     </div>
   </div>
+  
   <div class="top-actions">
+    <button class="icon-button top-icon-btn" aria-label="Support">
+      <i data-lucide="headphones"></i>
+    </button>
+    <button class="icon-button top-icon-btn" aria-label="Notifications">
+      <i data-lucide="bell"></i>
+    </button>
+
     <div class="profile">
       <div class="avatar" id="avatarInitials">U</div>
       <div class="profile-info">
         <strong id="profileName">User</strong>
         <span id="profileEmail">user@example.com</span>
       </div>
+      <i data-lucide="chevron-down" class="profile-chevron"></i>
     </div>
   </div>
 </header>

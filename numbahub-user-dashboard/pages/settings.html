@@ -6,73 +6,297 @@
   <title>Settings — NumbaHub</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Premium Settings Layout */
+    .settings-container {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .settings-menu {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 4px 20px -5px rgba(0,0,0,0.03);
+    }
+
+    .settings-menu-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .settings-menu-btn:hover {
+      background: #f8fafc;
+      color: var(--text);
+    }
+
+    .settings-menu-btn.active {
+      background: #eff6ff;
+      color: var(--brand);
+    }
+
+    .settings-menu-btn svg { width: 18px; height: 18px; }
+
+    .settings-content {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 20px -5px rgba(0,0,0,0.03);
+    }
+
+    /* Avatar Section */
+    .avatar-section {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding-bottom: 32px;
+      border-bottom: 1px dashed #e2e8f0;
+      margin-bottom: 32px;
+    }
+
+    .avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #eff6ff;
+      color: var(--brand);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    /* Form Layout */
+    .settings-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .settings-form-grid .full { grid-column: 1 / -1; }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      padding: 16px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+      transform: translateX(150%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+    }
+    .toast.show { transform: translateX(0); }
+
+    @media (max-width: 768px) {
+      .settings-container { grid-template-columns: 1fr; }
+      .settings-form-grid { grid-template-columns: 1fr; }
+      .settings-form-grid .full { grid-column: auto; }
+      .settings-content { padding: 24px; }
+    }
+  </style>
 </head>
 <body>
 <div class="app">
   <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
     <main class="container">
-      <div class="page-heading"><h2>Settings</h2><p>Manage your account profile.</p></div>
+      <div class="page-heading">
+        <h2>Settings</h2>
+        <p>Manage your account profile and preferences.</p>
+      </div>
       
-      <div class="settings-layout">
-        <div class="card settings-menu">
-          <button class="active">Profile</button>
+      <div class="settings-container">
+        <!-- Left Menu -->
+        <div class="settings-menu">
+          <button class="settings-menu-btn active">
+            <i data-lucide="user"></i> Profile
+          </button>
+          <button class="settings-menu-btn" onclick="alert('Security settings coming soon!')">
+            <i data-lucide="shield"></i> Security
+          </button>
+          <button class="settings-menu-btn" onclick="alert('Notification settings coming soon!')">
+            <i data-lucide="bell"></i> Notifications
+          </button>
+          <button class="settings-menu-btn" onclick="alert('Billing settings coming soon!')">
+            <i data-lucide="credit-card"></i> Billing
+          </button>
         </div>
         
-        <div class="card">
-          <h3 style="margin:0;font-size:17px;">Profile information</h3>
-          <div class="settings-fields" style="margin-top:22px;">
-            <div class="field"><label>First name</label><input class="input" id="setFirstName"></div>
-            <div class="field"><label>Last name</label><input class="input" id="setLastName"></div>
-            <div class="field full"><label>Email (Cannot be changed)</label><input class="input" id="setEmail" disabled></div>
-            <div class="field"><label>Phone number</label><input class="input" id="setPhone" placeholder="+234..."></div>
+        <!-- Right Content -->
+        <div class="settings-content">
+          <h3 style="margin: 0 0 24px; font-size: 18px; font-weight: 600;">Profile Information</h3>
+          
+          <!-- Avatar Section -->
+          <div class="avatar-section">
+            <div class="avatar-large" id="settingsAvatar">U</div>
+            <div>
+              <h4 style="margin: 0 0 4px; font-size: 16px;">Your Avatar</h4>
+              <p class="muted" style="margin: 0; font-size: 13px;">This is how your initials appear across NumbaHub.</p>
+            </div>
           </div>
-          <button class="blue-button" id="saveBtn" style="margin-top:22px;">Save changes</button>
+
+          <!-- Form -->
+          <div class="settings-form-grid">
+            <div class="premium-form-group">
+              <label>First Name</label>
+              <div class="input-wrapper">
+                <i data-lucide="type" class="input-icon"></i>
+                <input type="text" class="premium-input" id="setFirstName" placeholder="First name">
+              </div>
+            </div>
+
+            <div class="premium-form-group">
+              <label>Last Name</label>
+              <div class="input-wrapper">
+                <i data-lucide="type" class="input-icon"></i>
+                <input type="text" class="premium-input" id="setLastName" placeholder="Last name">
+              </div>
+            </div>
+
+            <div class="premium-form-group full">
+              <label>Email Address (Cannot be changed)</label>
+              <div class="input-wrapper">
+                <i data-lucide="mail" class="input-icon"></i>
+                <input type="email" class="premium-input" id="setEmail" disabled style="background: #f1f5f9; cursor: not-allowed;">
+              </div>
+            </div>
+
+            <div class="premium-form-group full">
+              <label>Phone Number</label>
+              <div class="input-wrapper">
+                <i data-lucide="phone" class="input-icon"></i>
+                <input type="tel" class="premium-input" id="setPhone" placeholder="+234 800 000 0000">
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 32px;">
+            <button class="btn-premium" id="saveBtn" style="width: auto; padding: 0 32px;">
+              Save Changes
+            </button>
+          </div>
         </div>
       </div>
     </main>
   </div>
 </div>
+
+<!-- 🟢 TOAST NOTIFICATION -->
+<div id="successToast" class="toast">
+  <i data-lucide="check-circle" style="width: 24px; height: 24px;"></i>
+  <div>
+    <div style="font-weight: 600; font-size: 14px;">Success!</div>
+    <div style="font-size: 13px;">Your profile has been updated.</div>
+  </div>
+</div>
+
 <script src="../assets/js/main.js"></script>
 <script src="../assets/js/api.js"></script>
 <script>
-  // Load initial data
   document.addEventListener("DOMContentLoaded", async () => {
+    const setFirstName = document.getElementById("setFirstName");
+    const setLastName = document.getElementById("setLastName");
+    const setEmail = document.getElementById("setEmail");
+    const setPhone = document.getElementById("setPhone");
+    const settingsAvatar = document.getElementById("settingsAvatar");
+    const saveBtn = document.getElementById("saveBtn");
+    const toast = document.getElementById("successToast");
+
+    // 1. Load initial data
     try {
       const data = await apiFetch("/auth/me");
-      document.getElementById("setFirstName").value = data.user.firstName;
-      document.getElementById("setLastName").value = data.user.lastName;
-      document.getElementById("setEmail").value = data.user.email;
-      document.getElementById("setPhone").value = data.user.phone || "";
+      
+      setFirstName.value = data.user.firstName || "";
+      setLastName.value = data.user.lastName || "";
+      setEmail.value = data.user.email || "";
+      setPhone.value = data.user.phone || "";
+      
+      // Update avatar initials
+      settingsAvatar.textContent = `${data.user.firstName?.[0] || ""}${data.user.lastName?.[0] || ""}`.toUpperCase();
+      
     } catch (error) {
-      console.log("Failed to load profile");
+      console.error("Failed to load profile", error);
     }
-  });
 
-  // Save data
-  document.getElementById("saveBtn").addEventListener("click", async () => {
-    const btn = document.getElementById("saveBtn");
-    btn.textContent = "Saving...";
+    // 2. Save data
+    saveBtn.addEventListener("click", async () => {
+      // UI Loading state
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Saving...";
 
-    const firstName = document.getElementById("setFirstName").value;
-    const lastName = document.getElementById("setLastName").value;
-    const phone = document.getElementById("setPhone").value;
+      const firstName = setFirstName.value.trim();
+      const lastName = setLastName.value.trim();
+      const phone = setPhone.value.trim();
 
-    try {
-      await apiFetch("/auth/profile", {
-        method: "PUT",
-        body: JSON.stringify({ firstName, lastName, phone }),
-      });
-      alert("Profile updated successfully!");
-      window.location.reload();
-    } catch (err) {
-      alert(err.message || "Failed to update profile");
-    } finally {
-      btn.textContent = "Save changes";
-    }
+      if (!firstName || !lastName) {
+        alert("First name and last name are required.");
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Changes";
+        return;
+      }
+
+      try {
+        const response = await apiFetch("/auth/profile", {
+          method: "PUT",
+          body: JSON.stringify({ firstName, lastName, phone }),
+        });
+        
+        // Update the cached user in localStorage so the topbar updates instantly
+        const cachedUser = getUser();
+        if (cachedUser) {
+          cachedUser.firstName = firstName;
+          cachedUser.lastName = lastName;
+          cachedUser.phone = phone;
+          setUser(cachedUser);
+        }
+
+        // Update Avatar initials locally
+        settingsAvatar.textContent = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
+
+        // Show beautiful toast instead of alert
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+
+        // Optional: refresh page after a slight delay so the topbar updates visually
+        setTimeout(() => window.location.reload(), 1500);
+
+      } catch (err) {
+        alert(err.message || "Failed to update profile");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Changes";
+      }
+    });
+
+    if (window.lucide) lucide.createIcons();
   });
 </script>
-<script>if (window.lucide) lucide.createIcons();</script>
 </body>
 </html>

@@ -9,63 +9,196 @@
 </head>
 <body>
 <div class="app">
-  
-<div id="sidebar"></div>
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
-
     <main class="container">
-      
-<div class="page-heading">
-  <h2>Receive SMS</h2>
-  <p>Get verification codes without using your personal number.</p>
-</div>
-<div class="page-layout">
-  <div class="card">
-    <div class="form-grid">
-      <div class="field">
-        <label>Country</label>
-        <select class="select">
-          <option>Choose a country</option>
-          <option>Nigeria</option>
-          <option>United States</option>
-          <option>United Kingdom</option>
-        </select>
+      <div class="page-heading">
+        <h2>Receive SMS</h2>
+        <p>Retrieve your active numbers and view verification codes.</p>
       </div>
-    </div>
-    <div class="form-grid">
-      <div class="field">
-        <label>Service</label>
-        <select class="select">
-          <option>Choose a service</option>
-          <option>Google</option>
-          <option>Telegram</option>
-          <option>WhatsApp</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-grid">
-      <div class="field">Cost<select class="input"></select></div>
-      
-    </div>
-    <button class="blue-button" style="margin-top:20px;">Get number</button>
-  </div>
-  <div class="helper-box">
-    <h3>How it works</h3>
-    <ol>
-      <li>Choose a country.</li>
-      <li>Select the service.</li>
-      <li>Get your temporary number.</li>
-      <li>Receive the verification code.</li>
-    </ol>
-  </div>
-</div>
 
+      <div id="activeOrdersGrid" class="grid-3">
+        <!-- Cards will be injected here -->
+        <div class="product-card" style="opacity: 0.5;"><div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div></div>
+      </div>
     </main>
   </div>
 </div>
+
+<script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
-<script>if (window.lucide) lucide.createIcons();</script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const grid = document.getElementById("activeOrdersGrid");
+    let activeOrders = [];
+    let timerInterval;
+
+    // 1. Fetch Active Orders
+    async function loadOrders() {
+      try {
+        const data = await apiFetch("/rent/active-orders");
+        activeOrders = data.orders || [];
+        
+        if (activeOrders.length === 0) {
+          grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; background: #fff; border-radius: 16px;">
+              <i data-lucide="inbox" style="width: 48px; height: 48px; color: var(--muted); margin: 0 auto 16px;"></i>
+              <h3 style="margin-bottom: 8px;">No Active Numbers</h3>
+              <p class="muted">You don't have any active SMS activations.</p>
+              <a href="rent.html" class="blue-button" style="display: inline-block; margin-top: 16px;">Rent a Number</a>
+            </div>
+          `;
+          if (window.lucide) lucide.createIcons();
+          return;
+        }
+
+        renderOrders();
+      } catch (error) {
+        grid.innerHTML = `<p class="text-red-500" style="grid-column: 1/-1;">Failed to load: ${error.message}</p>`;
+      }
+    }
+
+    // 2. Render Cards
+    function renderOrders() {
+      grid.innerHTML = activeOrders.map(order => {
+        const phone = order.details.phoneNumber;
+        const service = order.details.serviceCode;
+        const expiry = new Date(order.details.expiresAt).getTime();
+        const now = Date.now();
+        const timeLeft = Math.max(0, Math.floor((expiry - now) / 1000));
+        
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        const timeStr = timeLeft > 0 ? `${mins}:${secs.toString().padStart(2, '0')}` : "Expired";
+
+        return `
+          <div class="product-card" id="card-${order.providerReference}">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #eff6ff; color: var(--brand); display:grid; place-items:center;">
+                  <i data-lucide="message-square" style="width: 16px;"></i>
+                </div>
+                <h3 style="margin:0; font-size:16px; text-transform:capitalize;">${service}</h3>
+              </div>
+              <span class="count" id="timer-${order.providerReference}" style="background: ${timeLeft > 0 ? '#fff8e8' : '#fee2e2'}; color: ${timeLeft > 0 ? '#a56b00' : '#991b1b'};">
+                ${timeStr}
+              </span>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 16px;">
+              <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Your Number</div>
+              <div style="font-size: 20px; font-weight: 700; letter-spacing: 1px;">${phone}</div>
+            </div>
+
+            <div id="smsResult-${order.providerReference}"></div>
+            
+            <div style="display:flex; gap: 8px; margin-top: 16px;">
+              <button class="blue-button" style="flex:1;" 
+                onclick="checkSmsCode('${order.providerReference}', this)" ${timeLeft <= 0 ? 'disabled' : ''}>
+                Check SMS
+              </button>
+              <button class="btn-cancel" style="flex:0.5; padding: 12px;" 
+                onclick="finishOrder('${order.providerReference}', this)">
+                ${timeLeft > 0 ? 'Cancel' : 'Clear'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // 3. Live Countdown Timer
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        activeOrders.forEach(order => {
+          const timerEl = document.getElementById(`timer-${order.providerReference}`);
+          if (!timerEl) return;
+          
+          const expiry = new Date(order.details.expiresAt).getTime();
+          const now = Date.now();
+          const timeLeft = Math.max(0, Math.floor((expiry - now) / 1000));
+          
+          if (timeLeft === 0) {
+            timerEl.textContent = "Expired";
+            timerEl.style.background = '#fee2e2';
+            timerEl.style.color = '#991b1b';
+            const btn = timerEl.closest('.product-card').querySelector('.blue-button');
+            if (btn) btn.disabled = true;
+            const cancelBtn = timerEl.closest('.product-card').querySelector('.btn-cancel');
+            if (cancelBtn) cancelBtn.textContent = "Clear";
+            return;
+          }
+
+          const mins = Math.floor(timeLeft / 60);
+          const secs = timeLeft % 60;
+          timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        });
+      }, 1000);
+    }
+
+    // 4. Check SMS Code
+    window.checkSmsCode = async (orderId, btn) => {
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Checking...";
+      const resultDiv = document.getElementById(`smsResult-${orderId}`);
+
+      try {
+        const data = await apiFetch(`/rent/check/${orderId}`);
+        
+        if (data.sms && data.sms.length > 0) {
+          // Code received!
+          const code = data.sms[0].code;
+          resultDiv.innerHTML = `
+            <div style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 16px; border-radius: 12px; text-align: center; animation: fadeIn 0.3s;">
+              <div style="font-size: 12px; color: #065f46; margin-bottom: 4px;">Verification Code</div>
+              <div style="font-size: 28px; font-weight: 800; color: #059669; letter-spacing: 2px;">${code}</div>
+              <button onclick="navigator.clipboard.writeText('${code}')" style="margin-top: 8px; background: none; border: none; color: #059669; font-size: 12px; text-decoration: underline; cursor: pointer;">Copy Code</button>
+            </div>
+          `;
+        } else {
+          // No SMS yet
+          resultDiv.innerHTML = `
+            <div style="background: #eff6ff; border: 1px dashed #bfdbfe; padding: 12px; border-radius: 12px; text-align: center; color: #1e3a8a; font-size: 13px;">
+              Waiting for SMS... Make sure you entered the number correctly.
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<p class="text-red-500" style="font-size: 13px;">${error.message}</p>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    };
+
+    // 5. Finish / Cancel Order
+    window.finishOrder = async (orderId, btn) => {
+      if (!confirm("Are you sure? This will release the number permanently.")) return;
+      
+      btn.disabled = true;
+      try {
+        await apiFetch(`/rent/finish/${orderId}`, { method: "POST" });
+        document.getElementById(`card-${orderId}`).remove();
+        
+        if (document.querySelectorAll('.product-card').length === 0) {
+          loadOrders();
+        }
+      } catch (error) {
+        alert(error.message || "Failed to finish order.");
+        btn.disabled = false;
+      }
+    };
+
+    // Init
+    await loadOrders();
+    if (activeOrders.length > 0) startTimer();
+  });
+</script>
 </body>
 </html>

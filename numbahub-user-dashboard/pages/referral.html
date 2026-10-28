@@ -3,31 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verifications — NumbaHub</title>
+  <title>Referral — NumbaHub</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 <body>
 <div class="app">
-  
-<div id="sidebar"></div>
-
+  <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
-
     <main class="container">
-              
-        <div class="page-heading">
-            <h2>Referral</h2>
-            <p>Referral new user and cashout.</p>
+      <div class="page-heading text-center" style="margin-bottom: 32px;">
+        <h2 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <i data-lucide="users" style="color: var(--brand); width: 28px; height: 28px;"></i> Refer & Earn
+        </h2>
+        <p>Invite friends to NumbaHub and earn ₦500 when they sign up!</p>
+      </div>
+
+      <!-- Hero Referral Card -->
+      <div class="balance-card" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); margin-bottom: 32px; flex-direction: column; align-items: flex-start; gap: 20px; padding: 40px;">
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
+          <div>
+            <div class="balance-label">Your Referral Link</div>
+            <div style="font-size: 18px; font-weight: 500; color: #94a3b8; margin-top: 4px;">Share this link with your friends</div>
+          </div>
+          
+          <div style="background: rgba(255,255,255,0.1); padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; gap: 16px; width: 100%; max-width: 500px;">
+            <span id="refLinkText" style="flex: 1; font-size: 16px; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Loading...</span>
+            <button id="copyBtn" class="primary-button" style="padding: 10px 16px; font-size: 14px;">
+              <i data-lucide="copy" style="width: 16px;"></i> Copy
+            </button>
+          </div>
         </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid-3" style="margin-bottom: 32px;">
+        <div class="product-card" style="text-align: center;">
+          <div style="width: 48px; height: 48px; background: #eff6ff; color: var(--brand); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px;">
+            <i data-lucide="user-plus"></i>
+          </div>
+          <div class="muted">Total Referrals</div>
+          <div style="font-size: 28px; font-weight: 800; margin-top: 8px;" id="totalReferred">0</div>
+        </div>
+
+        <div class="product-card" style="text-align: center;">
+          <div style="width: 48px; height: 48px; background: #dcfce7; color: #166534; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px;">
+            <i data-lucide="wallet"></i>
+          </div>
+          <div class="muted">Referral Balance</div>
+          <div style="font-size: 28px; font-weight: 800; color: #166534; margin-top: 8px;" id="refBalance">₦0</div>
+        </div>
+
+        <div class="product-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
+          <button class="btn-premium" id="cashoutBtn" style="margin-top: 0;">
+            Cashout to Wallet
+          </button>
+          <p class="muted" style="font-size: 11px; margin-top: 8px;">Min. cashout ₦1,000</p>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div class="premium-card" style="max-width: 100%;">
+        <h3 style="margin-top: 0; margin-bottom: 20px;">How it works</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
+          <div>
+            <div style="width: 32px; height: 32px; background: var(--brand); color: #fff; border-radius: 50%; display: grid; place-items: center; font-weight: bold; margin-bottom: 12px;">1</div>
+            <h4 style="margin: 0 0 8px;">Share your link</h4>
+            <p class="muted" style="font-size: 13px; line-height: 1.6;">Send your unique referral link to friends via WhatsApp, Twitter, or email.</p>
+          </div>
+          <div>
+            <div style="width: 32px; height: 32px; background: var(--brand); color: #fff; border-radius: 50%; display: grid; place-items: center; font-weight: bold; margin-bottom: 12px;">2</div>
+            <h4 style="margin: 0 0 8px;">They sign up</h4>
+            <p class="muted" style="font-size: 13px; line-height: 1.6;">When they create an account and verify their email, you instantly earn ₦500.</p>
+          </div>
+          <div>
+            <div style="width: 32px; height: 32px; background: var(--brand); color: #fff; border-radius: 50%; display: grid; place-items: center; font-weight: bold; margin-bottom: 12px;">3</div>
+            <h4 style="margin: 0 0 8px;">Cashout</h4>
+            <p class="muted" style="font-size: 13px; line-height: 1.6;">Transfer your earnings directly into your NumbaHub wallet to spend.</p>
+          </div>
+        </div>
+      </div>
 
     </main>
   </div>
 </div>
+
+<script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
-<script>if (window.lucide) lucide.createIcons();</script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const refLinkText = document.getElementById("refLinkText");
+    const copyBtn = document.getElementById("copyBtn");
+    const totalReferredEl = document.getElementById("totalReferred");
+    const refBalanceEl = document.getElementById("refBalance");
+    const cashoutBtn = document.getElementById("cashoutBtn");
+
+    let currentRefCode = "";
+
+    // 1. Fetch Stats
+    try {
+      const data = await apiFetch("/referral/stats");
+      currentRefCode = data.referralCode;
+      
+      // Build the full URL for sharing
+      const baseUrl = window.location.origin + window.location.pathname.replace("pages/Referral.html", "pages/signup.html");
+      const shareableLink = `${baseUrl}?ref=${currentRefCode}`;
+      
+      refLinkText.textContent = shareableLink;
+      
+      totalReferredEl.textContent = data.totalReferred;
+      refBalanceEl.textContent = `₦${data.referralBalance.toLocaleString()}`;
+
+    } catch (error) {
+      refLinkText.textContent = "Failed to load referral code.";
+      console.error(error);
+    }
+
+    // 2. Copy to Clipboard
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(refLinkText.textContent).then(() => {
+        const originalHTML = copyBtn.innerHTML;
+        copyBtn.innerHTML = `<i data-lucide="check" style="width: 16px;"></i> Copied!`;
+        copyBtn.style.background = "#166534";
+        copyBtn.style.color = "#fff";
+        
+        setTimeout(() => {
+          copyBtn.innerHTML = originalHTML;
+          copyBtn.style.background = "";
+          copyBtn.style.color = "";
+          if (window.lucide) lucide.createIcons();
+        }, 2000);
+      });
+    });
+
+    // 3. Cashout
+    cashoutBtn.addEventListener("click", async () => {
+      const originalText = cashoutBtn.textContent;
+      cashoutBtn.disabled = true;
+      cashoutBtn.textContent = "Processing...";
+
+      try {
+        const response = await apiFetch("/referral/cashout", { method: "POST" });
+        
+        alert(`Successfully cashed out ₦${response.walletBalance.toLocaleString()} to your main wallet!`);
+        
+        // Reset UI
+        refBalanceEl.textContent = "₦0";
+        
+        // Update cached user balance
+        const cachedUser = getUser();
+        if (cachedUser) {
+          cachedUser.walletBalance = response.walletBalance;
+          setUser(cachedUser);
+        }
+
+      } catch (error) {
+        alert(error.message || "Failed to cashout.");
+      } finally {
+        cashoutBtn.disabled = false;
+        cashoutBtn.textContent = originalText;
+      }
+    });
+  });
+</script>
 </body>
 </html>

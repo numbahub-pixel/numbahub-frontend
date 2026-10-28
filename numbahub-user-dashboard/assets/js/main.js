@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 1. Populate from cache instantly
   const cachedUser = typeof getUser === "function" ? getUser() : null;
   if (cachedUser) {
-    setText("headerName", cachedUser.firstName);
+    // 👈 Shows First + Last Name
+    setText("headerName", `${cachedUser.firstName} ${cachedUser.lastName}`);
     setText("profileEmail", cachedUser.email);
     setText("avatarInitials", `${cachedUser.firstName?.[0] || ""}${cachedUser.lastName?.[0] || ""}`.toUpperCase());
     setText("walletBalance", `₦${Number(cachedUser.walletBalance || 0).toLocaleString()}`);
@@ -27,9 +28,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!response.ok) throw new Error("Sidebar component not found");
       sidebarHost.innerHTML = await response.text();
 
+      // 👈 SET THE LOGO PATH HERE (Pointing to the img folder)
+      const logoImg = document.getElementById('sidebarLogo');
+      if (logoImg) {
+        logoImg.src = `${base}img/NumbaHublogo.jpeg`;
+        
+        // Fallback: If the image is missing, hide it so the text still looks good
+        logoImg.onerror = () => {
+          logoImg.style.display = 'none';
+        };
+      }
+
       // Re-apply data after HTML injection
       if (cachedUser) {
-        setText("headerName", cachedUser.firstName);
+        setText("headerName", `${cachedUser.firstName} ${cachedUser.lastName}`);
         setText("profileEmail", cachedUser.email);
         setText("avatarInitials", `${cachedUser.firstName?.[0] || ""}${cachedUser.lastName?.[0] || ""}`.toUpperCase());
         const profileName = document.getElementById("profileName");
@@ -44,7 +56,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
           const data = await apiFetch("/auth/me");
           setUser(data.user);
-          setText("headerName", data.user.firstName);
+          // 👈 Shows First + Last Name
+          setText("headerName", `${data.user.firstName} ${data.user.lastName}`);
           setText("profileEmail", data.user.email);
           setText("walletBalance", `₦${Number(data.user.walletBalance || 0).toLocaleString()}`);
         } catch (err) {
@@ -52,10 +65,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
 
-      // 4. Mobile Sidebar Toggle Logic (FIXED)
+      // 4. Mobile Sidebar Toggle Logic
       const menuBtn = document.querySelector("[data-menu]");
       const overlay = document.querySelector(".overlay");
-      const sidebarElement = document.querySelector(".sidebar"); // Target the actual <aside>
+      const sidebarElement = document.querySelector(".sidebar");
 
       if (menuBtn && overlay && sidebarElement) {
         menuBtn.addEventListener("click", () => {
