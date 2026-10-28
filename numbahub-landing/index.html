@@ -17,6 +17,7 @@
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  
   <header class="site-header" id="top">
     <nav class="nav wrap" aria-label="Main navigation">
       <a class="brand" href="#top" aria-label="NumbaHub home">
@@ -28,8 +29,8 @@
       <div class="nav-links" id="navLinks">
         <a href="#services">Services</a><a href="#how-it-works">How it works</a><a href="#why-us">Why NumbaHub</a><a href="#faq">FAQs</a>
         <div class="nav-actions">
-          <!-- <a class="login-link" href="./numbahub-user-dashboard/index.html">Log in</a> -->
-          <a class="button button-small button-primary" href="/numbahub-frontend/numbahub-user-dashboard/pages/signin.html">Login 
+          <!-- 👈 FIXED LOGIN LINK -->
+          <a class="button button-small button-primary" href="./numbahub-user-dashboard/pages/login.html">Login 
             <i data-lucide="arrow-up-right"></i>
           </a>
         </div>
@@ -43,9 +44,22 @@
         <div class="eyebrow"><span class="eyebrow-pulse"></span> YOUR DIGITAL WORLD, CONNECTED</div>
         <h1>One hub.<br><span class="gradient-text">More possibilities.</span></h1>
         <p class="hero-description">From virtual numbers to everyday digital essentials, get the tools you need in one simple place.</p>
-        <div class="hero-actions"><a class="button button-primary button-large" href="./numbahub-user-dashboard/index.html">Explore NumbaHub <i data-lucide="arrow-up-right"></i></a><a class="button button-quiet button-large" href="#services"><span class="play-icon"><i data-lucide="play"></i></span> Explore services</a></div>
-        <div class="hero-proof"><div class="proof-icon"><i data-lucide="layers-3"></i></div><div><strong>Everything in one place</strong><span>Less switching. More doing.</span></div><span class="proof-divider"></span><div class="proof-icon blue"><i data-lucide="smartphone"></i></div><div><strong>Made for your workflow</strong><span>Simple on every screen</span></div></div>
+        
+        <!-- 👈 FIXED EXPLORE LINK -->
+        <div class="hero-actions">
+          <a class="button button-primary button-large" href="./numbahub-user-dashboard/index.html">Explore NumbaHub <i data-lucide="arrow-up-right"></i></a>
+          <a class="button button-quiet button-large" href="#services"><span class="play-icon"><i data-lucide="play"></i></span> Explore services</a>
+        </div>
+        
+        <div class="hero-proof">
+          <div class="proof-icon"><i data-lucide="layers-3"></i></div>
+          <div><strong>Everything in one place</strong><span>Less switching. More doing.</span></div>
+          <span class="proof-divider"></span>
+          <div class="proof-icon blue"><i data-lucide="smartphone"></i></div>
+          <div><strong>Made for your workflow</strong><span>Simple on every screen</span></div>
+        </div>
       </div>
+      
       <div class="hero-visual reveal reveal-delay" aria-label="Illustration of the NumbaHub digital services dashboard">
         <div class="visual-orbit orbit-a"></div><div class="visual-orbit orbit-b"></div>
         <div class="float-chip chip-top"><span class="chip-symbol"><i data-lucide="zap"></i></span><span><b>Ready when you are</b><small>Digital essentials, simplified</small></span><span class="chip-dot"></span></div>
@@ -62,132 +76,213 @@
 
     <section class="trust-strip"><div class="wrap trust-inner"><span>ONE PLATFORM, MANY POSSIBILITIES</span><div class="trust-item"><i data-lucide="grid-2x2"></i> Multiple digital services</div><div class="trust-item"><i data-lucide="mouse-pointer-2"></i> Easy to navigate</div><div class="trust-item"><i data-lucide="monitor-smartphone"></i> Designed for every screen</div></div></section>
 
-    <section class="section services-section" id="services"><div class="wrap"><div class="section-heading centered reveal"><span class="section-kicker">YOUR DIGITAL TOOLKIT</span><h2>Useful services.<br><span class="gradient-text">One seamless experience.</span></h2><p>Explore a growing collection of digital essentials, thoughtfully brought together.</p></div>
-      <div class="services-grid">
-        <a class="service-card service-featured reveal" href="./numbahub-user-dashboard/pages/receive-sms.html">
-          <div class="card-top">
-            <span class="service-icon icon-violet">
-              <i data-lucide="message-square-text"></i>
-            </span>
-            <span class="card-arrow">
-              <i data-lucide="arrow-up-right"></i>
-            </span>
-          </div>
-          <span class="card-category">VIRTUAL NUMBERS</span>
-          <h3>Receive SMS</h3>
-          <p>Access virtual numbers for supported verification needs.</p>
-          <div class="card-foot">
-            <span>Explore service</span>
-            <i data-lucide="arrow-right"></i>
-          </div>
-          <div class="card-decoration deco-chat">
-            <i data-lucide="message-circle"></i>
-            <span>•••</span>
-          </div>
-        </a>
-        <a class="service-card reveal" href="./numbahub-user-dashboard/pages/premium-sms.html">
-          <div class="card-top">
-            <span class="service-icon icon-blue">
-              <i data-lucide="shield-check"></i>
-            </span>
-            <span class="card-arrow">
-              <i data-lucide="arrow-up-right"></i>
-            </span>
-          </div>
-          <span class="card-category">VERIFICATION</span>
-          <h3>Premium SMS</h3>
-          <p>Explore premium SMS options for supported services.</p>
-          <div class="card-foot">
-            <span>Explore service</span>
-            <i data-lucide="arrow-right"></i>
-          </div>
-        </a>
-        <a class="service-card reveal" href="./numbahub-user-dashboard/pages/rent.html">
-          <div class="card-top">
-            <span class="service-icon icon-cyan">
-              <i data-lucide="calendar-clock"></i>
-            </span>
-            <span class="card-arrow">
-              <i data-lucide="arrow-up-right"></i>
-            </span>
-          </div>
-          <span class="card-category">FLEXIBLE ACCESS</span>
-          <h3>Number Rental</h3>
-          <p>Find rental options for longer-term number needs.</p>
-          <div class="card-foot">
-            <span>Explore service</span>
-            <i data-lucide="arrow-right"></i>
-          </div>
-        </a>
-        <a class="service-card reveal" href="./numbahub-user-dashboard/pages/airtime.html">
-          <div class="card-top">
-            <span class="service-icon icon-orange">
-              <i data-lucide="smartphone"></i>
-            </span>
-            <span class="card-arrow">
-              <i data-lucide="arrow-up-right"></i>
-            </span>
-          </div>
-          <span class="card-category">STAY CONNECTED</span>
-          <h3>Airtime</h3>
-          <p>Keep your mobile line topped up with convenient airtime options.</p>
-          <div class="card-foot">
-            <span>Explore service</span>
-            <i data-lucide="arrow-right"></i>
-          </div>
-        </a>
-        <a class="service-card reveal" href="./numbahub-user-dashboard/pages/esim.html">
-          <div class="card-top">
-            <span class="service-icon icon-green">
-              <i data-lucide="globe-2"></i>
-            </span>
-            <span class="card-arrow">
-              <i data-lucide="arrow-up-right"></i>
-            </span>
-          </div>
-          <span class="card-category">CONNECTED EVERYWHERE</span>
-          <h3>eSIM</h3>
-          <p>Explore digital SIM options for compatible devices and destinations.</p>
-          <div class="card-foot">
-            <span>Explore service</span>
-            <i data-lucide="arrow-right"></i>
-          </div>
-        </a>
-        <a class="service-card reveal" href="./numbahub-user-dashboard/pages/giftcards.html">
-          <div class="card-top">
-            <span class="service-icon icon-pink">
-              <i data-lucide="gift"></i>
-            </span>
-            <span class="card-arrow">
-              <i data-lucide="arrow-up-right"></i>
-            </span>
-          </div>
-          <span class="card-category">DIGITAL GIFTING</span>
-          <h3>Gift Cards</h3>
-          <p>Discover gift card options available on the platform.</p>
-          <div class="card-foot">
-            <span>Explore service</span>
-            <i data-lucide="arrow-right"></i>
-          </div>
-        </a>
+    <section class="section services-section" id="services">
+      <div class="wrap">
+        <div class="section-heading centered reveal">
+          <span class="section-kicker">YOUR DIGITAL TOOLKIT</span>
+          <h2>Useful services.<br><span class="gradient-text">One seamless experience.</span></h2>
+          <p>Explore a growing collection of digital essentials, thoughtfully brought together.</p>
+        </div>
+        
+        <div class="services-grid">
+          <a class="service-card service-featured reveal" href="./numbahub-user-dashboard/pages/receive-sms.html">
+            <div class="card-top">
+              <span class="service-icon icon-violet"><i data-lucide="message-square-text"></i></span>
+              <span class="card-arrow"><i data-lucide="arrow-up-right"></i></span>
+            </div>
+            <span class="card-category">VIRTUAL NUMBERS</span>
+            <h3>Receive SMS</h3>
+            <p>Access virtual numbers for supported verification needs.</p>
+            <div class="card-foot"><span>Explore service</span><i data-lucide="arrow-right"></i></div>
+            <div class="card-decoration deco-chat"><i data-lucide="message-circle"></i><span>•••</span></div>
+          </a>
+          
+          <a class="service-card reveal" href="./numbahub-user-dashboard/pages/verifications.html">
+            <div class="card-top">
+              <span class="service-icon icon-blue"><i data-lucide="shield-check"></i></span>
+              <span class="card-arrow"><i data-lucide="arrow-up-right"></i></span>
+            </div>
+            <span class="card-category">VERIFICATION</span>
+            <h3>Verifications</h3>
+            <p>Explore premium SMS options for supported services.</p>
+            <div class="card-foot"><span>Explore service</span><i data-lucide="arrow-right"></i></div>
+          </a>
+
+          <a class="service-card reveal" href="./numbahub-user-dashboard/pages/rent.html">
+            <div class="card-top">
+              <span class="service-icon icon-cyan"><i data-lucide="calendar-clock"></i></span>
+              <span class="card-arrow"><i data-lucide="arrow-up-right"></i></span>
+            </div>
+            <span class="card-category">FLEXIBLE ACCESS</span>
+            <h3>Number Rental</h3>
+            <p>Find rental options for longer-term number needs.</p>
+            <div class="card-foot"><span>Explore service</span><i data-lucide="arrow-right"></i></div>
+          </a>
+          
+          <a class="service-card reveal" href="./numbahub-user-dashboard/pages/airtime.html">
+            <div class="card-top">
+              <span class="service-icon icon-orange"><i data-lucide="smartphone"></i></span>
+              <span class="card-arrow"><i data-lucide="arrow-up-right"></i></span>
+            </div>
+            <span class="card-category">STAY CONNECTED</span>
+            <h3>Airtime</h3>
+            <p>Keep your mobile line topped up with convenient airtime options.</p>
+            <div class="card-foot"><span>Explore service</span><i data-lucide="arrow-right"></i></div>
+          </a>
+          
+          <a class="service-card reveal" href="./numbahub-user-dashboard/pages/esim.html">
+            <div class="card-top">
+              <span class="service-icon icon-green"><i data-lucide="globe-2"></i></span>
+              <span class="card-arrow"><i data-lucide="arrow-up-right"></i></span>
+            </div>
+            <span class="card-category">CONNECTED EVERYWHERE</span>
+            <h3>eSIM</h3>
+            <p>Explore digital SIM options for compatible devices and destinations.</p>
+            <div class="card-foot"><span>Explore service</span><i data-lucide="arrow-right"></i></div>
+          </a>
+          
+          <a class="service-card reveal" href="./numbahub-user-dashboard/pages/giftcards.html">
+            <div class="card-top">
+              <span class="service-icon icon-pink"><i data-lucide="gift"></i></span>
+              <span class="card-arrow"><i data-lucide="arrow-up-right"></i></span>
+            </div>
+            <span class="card-category">DIGITAL GIFTING</span>
+            <h3>Gift Cards</h3>
+            <p>Discover gift card options available on the platform.</p>
+            <div class="card-foot"><span>Explore service</span><i data-lucide="arrow-right"></i></div>
+          </a>
+        </div>
+        <p class="services-note"><i data-lucide="info"></i> Service availability, supported providers, and pricing may vary. Check the platform for current details.</p>
       </div>
-      <p class="services-note"><i data-lucide="info"></i> Service availability, supported providers, and pricing may vary. Check the platform for current details.</p>
-    </div>
-  </section>
+    </section>
 
-    <section class="section how-section" id="how-it-works"><div class="wrap how-layout"><div class="how-copy reveal"><span class="section-kicker">GET STARTED WITH EASE</span><h2>Less figuring out.<br><span class="gradient-text">More getting done.</span></h2><p>NumbaHub is designed to make finding and using digital services feel straightforward from the very first step.</p><a class="button button-primary" href="./numbahub-user-dashboard/index.html">Get started <i data-lucide="arrow-right"></i></a><div class="how-decoration"><div class="deco-ring ring-one"></div><div class="deco-ring ring-two"></div><div class="deco-center"><span class="brand-mark"><span>N</span><i></i></span></div><span class="orbit-label label-one"><i data-lucide="search"></i> Discover</span><span class="orbit-label label-two"><i data-lucide="mouse-pointer-click"></i> Choose</span><span class="orbit-label label-three"><i data-lucide="check-circle-2"></i> Get going</span></div></div>
-      <div class="steps-list"><article class="step-card reveal"><div class="step-number">01</div><div class="step-icon"><i data-lucide="user-round-plus"></i></div><div><h3>Create your account</h3><p>Get started with your account and access the NumbaHub platform.</p></div><i class="step-check" data-lucide="check-circle-2"></i></article><article class="step-card reveal"><div class="step-number">02</div><div class="step-icon"><i data-lucide="layout-grid"></i></div><div><h3>Choose a service</h3><p>Browse available services and select the option that fits your needs.</p></div><i class="step-check" data-lucide="check-circle-2"></i></article><article class="step-card reveal"><div class="step-number">03</div><div class="step-icon"><i data-lucide="rocket"></i></div><div><h3>Follow the steps</h3><p>Complete the instructions shown for your selected service.</p></div><i class="step-check" data-lucide="check-circle-2"></i></article></div></div></section>
+    <section class="section how-section" id="how-it-works">
+      <div class="wrap how-layout">
+        <div class="how-copy reveal">
+          <span class="section-kicker">GET STARTED WITH EASE</span>
+          <h2>Less figuring out.<br><span class="gradient-text">More getting done.</span></h2>
+          <p>NumbaHub is designed to make finding and using digital services feel straightforward from the very first step.</p>
+          <a class="button button-primary" href="./numbahub-user-dashboard/index.html">Get started <i data-lucide="arrow-right"></i></a>
+          <div class="how-decoration">
+            <div class="deco-ring ring-one"></div><div class="deco-ring ring-two"></div>
+            <div class="deco-center"><span class="brand-mark"><span>N</span><i></i></span></div>
+            <span class="orbit-label label-one"><i data-lucide="search"></i> Discover</span>
+            <span class="orbit-label label-two"><i data-lucide="mouse-pointer-click"></i> Choose</span>
+            <span class="orbit-label label-three"><i data-lucide="check-circle-2"></i> Get going</span>
+          </div>
+        </div>
+        <div class="steps-list">
+          <article class="step-card reveal"><div class="step-number">01</div><div class="step-icon"><i data-lucide="user-round-plus"></i></div><div><h3>Create your account</h3><p>Get started with your account and access the NumbaHub platform.</p></div><i class="step-check" data-lucide="check-circle-2"></i></article>
+          <article class="step-card reveal"><div class="step-number">02</div><div class="step-icon"><i data-lucide="layout-grid"></i></div><div><h3>Choose a service</h3><p>Browse available services and select the option that fits your needs.</p></div><i class="step-check" data-lucide="check-circle-2"></i></article>
+          <article class="step-card reveal"><div class="step-number">03</div><div class="step-icon"><i data-lucide="rocket"></i></div><div><h3>Follow the steps</h3><p>Complete the instructions shown for your selected service.</p></div><i class="step-check" data-lucide="check-circle-2"></i></article>
+        </div>
+      </div>
+    </section>
 
-    <section class="section benefits-section" id="why-us"><div class="wrap"><div class="section-heading reveal"><span class="section-kicker">WHY NUMBAHUB</span><h2>Built around <span class="gradient-text">your convenience.</span></h2><p>Digital services should feel simple. That’s the experience we’re working to create.</p></div><div class="benefits-grid"><article class="benefit-card reveal"><div class="benefit-visual visual-layers"><span><i data-lucide="layers-3"></i></span><span><i data-lucide="grid-2x2"></i></span><span><i data-lucide="app-window"></i></span></div><h3>One convenient hub</h3><p>Find a range of digital services without jumping between multiple platforms.</p></article><article class="benefit-card reveal"><div class="benefit-visual visual-spark"><div class="spark-circle"><i data-lucide="sparkles"></i></div><span class="spark-dot dot-a"></span><span class="spark-dot dot-b"></span><span class="spark-dot dot-c"></span></div><h3>Simple by design</h3><p>A clear interface helps you focus on what you came to do.</p></article><article class="benefit-card reveal"><div class="benefit-visual visual-devices"><div class="device-tablet"></div><div class="device-phone"><span></span><i data-lucide="check"></i></div><div class="device-glow"></div></div><h3>Fits your screen</h3><p>Use a responsive experience across desktop, tablet, and mobile devices.</p></article></div></div></section>
+    <section class="section benefits-section" id="why-us">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <span class="section-kicker">WHY NUMBAHUB</span>
+          <h2>Built around <span class="gradient-text">your convenience.</span></h2>
+          <p>Digital services should feel simple. That’s the experience we’re working to create.</p>
+        </div>
+        <div class="benefits-grid">
+          <article class="benefit-card reveal"><div class="benefit-visual visual-layers"><span><i data-lucide="layers-3"></i></span><span><i data-lucide="grid-2x2"></i></span><span><i data-lucide="app-window"></i></span></div><h3>One convenient hub</h3><p>Find a range of digital services without jumping between multiple platforms.</p></article>
+          <article class="benefit-card reveal"><div class="benefit-visual visual-spark"><div class="spark-circle"><i data-lucide="sparkles"></i></div><span class="spark-dot dot-a"></span><span class="spark-dot dot-b"></span><span class="spark-dot dot-c"></span></div><h3>Simple by design</h3><p>A clear interface helps you focus on what you came to do.</p></article>
+          <article class="benefit-card reveal"><div class="benefit-visual visual-devices"><div class="device-tablet"></div><div class="device-phone"><span></span><i data-lucide="check"></i></div><div class="device-glow"></div></div><h3>Fits your screen</h3><p>Use a responsive experience across desktop, tablet, and mobile devices.</p></article>
+        </div>
+      </div>
+    </section>
 
-    <section class="section dashboard-section"><div class="wrap dashboard-promo"><div class="promo-copy reveal"><span class="section-kicker">A CLEARER WAY TO WORK</span><h2>Your services.<br><span class="gradient-text">Your space.</span></h2><p>Keep the essentials close with a platform designed to help you find services and manage your activity in one place.</p><ul class="promo-list"><li><i data-lucide="check-circle-2"></i> Quick access to available services</li><li><i data-lucide="check-circle-2"></i> A straightforward user experience</li><li><i data-lucide="check-circle-2"></i> Activity and account tools where available</li></ul><a class="button button-primary" href="./numbahub-user-dashboard/index.html">Visit your hub <i data-lucide="arrow-up-right"></i></a></div><div class="promo-visual reveal reveal-delay"><div class="promo-glow"></div><div class="promo-card"><div class="promo-card-header"><div><span class="mini-mark">N</span><b>My NumbaHub</b></div><span class="online-indicator"><i></i> Your hub</span></div><div class="promo-welcome"><div><small>YOUR SPACE</small><h3>What would you like to do?</h3></div><span class="welcome-emoji"><i data-lucide="hand"></i></span></div><div class="promo-quick-grid"><div><span class="quick-icon q-violet"><i data-lucide="message-square"></i></span><b>Receive SMS</b><small>Virtual numbers</small><i class="quick-arrow" data-lucide="arrow-up-right"></i></div><div><span class="quick-icon q-blue"><i data-lucide="smartphone"></i></span><b>Airtime</b><small>Mobile top-ups</small><i class="quick-arrow" data-lucide="arrow-up-right"></i></div><div><span class="quick-icon q-green"><i data-lucide="globe"></i></span><b>eSIM</b><small>Digital SIM</small><i class="quick-arrow" data-lucide="arrow-up-right"></i></div><div><span class="quick-icon q-orange"><i data-lucide="gift"></i></span><b>Gift cards</b><small>Digital gifting</small><i class="quick-arrow" data-lucide="arrow-up-right"></i></div></div><div class="promo-card-footer"><span><i data-lucide="shield-check"></i> Your dashboard preview</span><span class="footer-skeleton"></span></div></div><div class="promo-float float-left"><i data-lucide="sparkles"></i><span>Everything together</span></div><div class="promo-float float-right"><i data-lucide="mouse-pointer-click"></i><span>Easy to explore</span></div></div></div></section>
+    <section class="section dashboard-section">
+      <div class="wrap dashboard-promo">
+        <div class="promo-copy reveal">
+          <span class="section-kicker">A CLEARER WAY TO WORK</span>
+          <h2>Your services.<br><span class="gradient-text">Your space.</span></h2>
+          <p>Keep the essentials close with a platform designed to help you find services and manage your activity in one place.</p>
+          <ul class="promo-list">
+            <li><i data-lucide="check-circle-2"></i> Quick access to available services</li>
+            <li><i data-lucide="check-circle-2"></i> A straightforward user experience</li>
+            <li><i data-lucide="check-circle-2"></i> Activity and account tools where available</li>
+          </ul>
+          <a class="button button-primary" href="./numbahub-user-dashboard/index.html">Visit your hub <i data-lucide="arrow-up-right"></i></a>
+        </div>
+        <div class="promo-visual reveal reveal-delay">
+          <div class="promo-glow"></div>
+          <div class="promo-card">
+            <div class="promo-card-header"><div><span class="mini-mark">N</span><b>My NumbaHub</b></div><span class="online-indicator"><i></i> Your hub</span></div>
+            <div class="promo-welcome"><div><small>YOUR SPACE</small><h3>What would you like to do?</h3></div><span class="welcome-emoji"><i data-lucide="hand"></i></span></div>
+            <div class="promo-quick-grid">
+              <div><span class="quick-icon q-violet"><i data-lucide="message-square"></i></span><b>Receive SMS</b><small>Virtual numbers</small><i class="quick-arrow" data-lucide="arrow-up-right"></i></div>
+              <div><span class="quick-icon q-blue"><i data-lucide="smartphone"></i></span><b>Airtime</b><small>Mobile top-ups</small><i class="quick-arrow" data-lucide="arrow-up-right"></i></div>
+              <div><span class="quick-icon q-green"><i data-lucide="globe"></i></span><b>eSIM</b><small>Digital SIM</small><i class="quick-arrow" data-lucide="arrow-up-right"></i></div>
+              <div><span class="quick-icon q-orange"><i data-lucide="gift"></i></span><b>Gift cards</b><small>Digital gifting</small><i class="quick-arrow" data-lucide="arrow-up-right"></i></div>
+            </div>
+            <div class="promo-card-footer"><span><i data-lucide="shield-check"></i> Your dashboard preview</span><span class="footer-skeleton"></span></div>
+          </div>
+          <div class="promo-float float-left"><i data-lucide="sparkles"></i><span>Everything together</span></div>
+          <div class="promo-float float-right"><i data-lucide="mouse-pointer-click"></i><span>Easy to explore</span></div>
+        </div>
+      </div>
+    </section>
 
-    <section class="cta-section"><div class="cta-orb cta-orb-one"></div><div class="cta-orb cta-orb-two"></div><div class="wrap cta-content reveal"><span class="cta-icon"><i data-lucide="move-up-right"></i></span><span class="section-kicker">YOUR NEXT STEP STARTS HERE</span><h2>Make your digital life<br><span>feel a little simpler.</span></h2><p>Discover what you can do with NumbaHub.</p><a class="button button-white button-large" href="./numbahub-user-dashboard/index.html">Explore NumbaHub <i data-lucide="arrow-up-right"></i></a><div class="cta-sparkle cta-sparkle-one">✦</div><div class="cta-sparkle cta-sparkle-two">✳</div></div></section>
+    <section class="cta-section">
+      <div class="cta-orb cta-orb-one"></div><div class="cta-orb cta-orb-two"></div>
+      <div class="wrap cta-content reveal">
+        <span class="cta-icon"><i data-lucide="move-up-right"></i></span>
+        <span class="section-kicker">YOUR NEXT STEP STARTS HERE</span>
+        <h2>Make your digital life<br><span>feel a little simpler.</span></h2>
+        <p>Discover what you can do with NumbaHub.</p>
+        <a class="button button-white button-large" href="./numbahub-user-dashboard/index.html">Explore NumbaHub <i data-lucide="arrow-up-right"></i></a>
+        <div class="cta-sparkle cta-sparkle-one">✦</div><div class="cta-sparkle cta-sparkle-two">✳</div>
+      </div>
+    </section>
 
-    <section class="section faq-section" id="faq"><div class="wrap faq-layout"><div class="faq-intro reveal"><span class="section-kicker">GOOD TO KNOW</span><h2>Questions?<br><span class="gradient-text">We’ve got you.</span></h2><p>A few helpful answers to get you started with NumbaHub.</p><a class="faq-contact" href="mailto:support@numbahub.com">Need more help? <i data-lucide="arrow-up-right"></i></a></div><div class="faq-list reveal"><details><summary>What is NumbaHub?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>NumbaHub is a digital services platform bringing supported online tools and everyday digital essentials together in one convenient place.</p></details><details><summary>What services can I use?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>Services may include virtual numbers, SMS options, number rental, airtime, eSIM, and gift cards. Availability and supported providers can change, so check the platform for current options.</p></details><details><summary>How do I get started?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>Use the Get Started or Log In links to open the account area. Follow the instructions presented there.</p></details><details><summary>Can I use NumbaHub on my phone?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>Yes. This landing page is designed to adapt to mobile phones, tablets, laptops, and desktop screens.</p></details><details><summary>Where can I check pricing and availability?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>Check the relevant service page for current pricing, supported providers, and availability before placing an order.</p></details></div></div></section>
+    <section class="section faq-section" id="faq">
+      <div class="wrap faq-layout">
+        <div class="faq-intro reveal">
+          <span class="section-kicker">GOOD TO KNOW</span>
+          <h2>Questions?<br><span class="gradient-text">We’ve got you.</span></h2>
+          <p>A few helpful answers to get you started with NumbaHub.</p>
+          <a class="faq-contact" href="mailto:support@numbahub.com">Need more help? <i data-lucide="arrow-up-right"></i></a>
+        </div>
+        <div class="faq-list reveal">
+          <details><summary>What is NumbaHub?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>NumbaHub is a digital services platform bringing supported online tools and everyday digital essentials together in one convenient place.</p></details>
+          <details><summary>What services can I use?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>Services may include virtual numbers, SMS options, number rental, airtime, eSIM, and gift cards. Availability and supported providers can change, so check the platform for current options.</p></details>
+          <details><summary>How do I get started?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>Use the Get Started or Log In links to open the account area. Follow the instructions presented there.</p></details>
+          <details><summary>Can I use NumbaHub on my phone?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>Yes. This landing page is designed to adapt to mobile phones, tablets, laptops, and desktop screens.</p></details>
+          <details><summary>Where can I check pricing and availability?<span class="faq-plus"><i data-lucide="plus"></i></span></summary><p>Check the relevant service page for current pricing, supported providers, and availability before placing an order.</p></details>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer class="site-footer"><div class="wrap"><div class="footer-main"><div class="footer-brand-col"><a class="brand" href="#top"><span class="brand-mark"><span>N</span><i></i></span><span class="brand-name">numba<span>hub</span></span></a><p>Your digital world, connected. Discover everyday digital services in one convenient place.</p></div><div class="footer-col"><b>Explore</b><a href="#services">Services</a><a href="#how-it-works">How it works</a><a href="#why-us">Why NumbaHub</a></div><div class="footer-col"><b>Account</b><a href="./numbahub-user-dashboard/index.html">Log in</a><a href="./numbahub-user-dashboard/index.html">Get started</a><a href="#faq">FAQs</a></div><div class="footer-col"><b>Information</b><a href="#faq">Help & support</a><a href="#top">Privacy policy</a><a href="#top">Terms of service</a></div></div><div class="footer-bottom"><span>© <span id="year"></span> NumbaHub. All rights reserved.</span><a href="#top" class="back-top">Back to top <i data-lucide="arrow-up"></i></a><span class="footer-made"><span class="footer-dot"></span> Built for your digital world</span></div></div></footer>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-main">
+        <div class="footer-brand-col">
+          <a class="brand" href="#top"><span class="brand-mark"><span>N</span><i></i></span><span class="brand-name">numba<span>hub</span></span></a>
+          <p>Your digital world, connected. Discover everyday digital services in one convenient place.</p>
+        </div>
+        <div class="footer-col"><b>Explore</b><a href="#services">Services</a><a href="#how-it-works">How it works</a><a href="#why-us">Why NumbaHub</a></div>
+        
+        <!-- 👈 FIXED FOOTER LINKS -->
+        <div class="footer-col">
+          <b>Account</b>
+          <a href="./numbahub-user-dashboard/pages/login.html">Log in</a>
+          <a href="./numbahub-user-dashboard/pages/signup.html">Get started</a>
+          <a href="#faq">FAQs</a>
+        </div>
+        
+        <div class="footer-col"><b>Information</b><a href="#faq">Help & support</a><a href="#top">Privacy policy</a><a href="#top">Terms of service</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> NumbaHub. All rights reserved.</span>
+        <a href="#top" class="back-top">Back to top <i data-lucide="arrow-up"></i></a>
+        <span class="footer-made"><span class="footer-dot"></span> Built for your digital world</span>
+      </div>
+    </div>
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>
