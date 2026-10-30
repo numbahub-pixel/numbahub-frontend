@@ -10,7 +10,8 @@
   <main class="grid min-h-screen lg:grid-cols-2">
     <!-- Left Panel -->
     <section class="relative hidden overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-blue-700 p-12 text-white lg:flex lg:flex-col lg:justify-between">
-      <a href="login.html" class="text-2xl font-bold">Numba<span class="text-blue-400">Hub</span></a>
+      <!-- 👈 FIX: Points to the parent folder instead of login.html -->
+      <a href="../" class="text-2xl font-bold">Numba<span class="text-blue-400">Hub</span></a>
       <div class="relative z-10 max-w-lg">
         <p class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-blue-300">Your digital toolkit</p>
         <h1 class="text-5xl font-bold leading-tight">Everything you need.<span class="block text-blue-400">All in one hub.</span></h1>
@@ -29,7 +30,6 @@
         </div>
 
         <form id="loginForm" class="space-y-5" novalidate>
-          <!-- Error banner -->
           <div id="formError" role="alert" aria-live="assertive"
                class="hidden rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"></div>
 
@@ -52,7 +52,8 @@
 
         <p class="mt-8 text-center text-sm text-slate-500">
           Don't have an account?
-          <a href="signup.html" class="font-semibold text-blue-600 hover:text-blue-700">Create an account</a>
+          <!-- 👈 FIX: Removed .html to support Vercel cleanUrls -->
+          <a href="signup" class="font-semibold text-blue-600 hover:text-blue-700">Create an account</a>
         </p>
       </div>
     </section>
@@ -75,7 +76,6 @@
         errorBox.textContent = "";
       };
 
-      // Show "session expired" hint if apiFetch bounced us here
       const params = new URLSearchParams(window.location.search);
       if (params.get("reason") === "expired") {
         showError("Your session has expired. Please log in again.");
@@ -97,7 +97,6 @@
         btn.innerHTML = "Logging in…";
 
         try {
-          // auth:false  → don't send token, don't auto-logout on 401
           const data = await apiFetch("/auth/login", {
             method: "POST",
             body: JSON.stringify({ email, password }),
@@ -106,9 +105,11 @@
 
           setToken(data.token);
           setUser(data.user);
-          window.location.href = "../index.html";
+          
+          // 👈 FIX: Redirect to the folder root instead of ../index.html
+          window.location.href = "../";
+          
         } catch (err) {
-          // err.message is the backend message, e.g. "Invalid email or password."
           showError(err.message || "Unable to log in. Please try again.");
         } finally {
           btn.disabled = false;
@@ -119,5 +120,3 @@
   </script>
 </body>
 </html>
-
-<!-- numbahb -->
