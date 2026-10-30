@@ -5,7 +5,7 @@
 (function (global) {
   "use strict";
 
-  const API_URL = "http://localhost:5000/api";
+  const API_URL = "https://numbahub-backend.onrender.com/api"; 
   const TOKEN_KEY = "token";
   const USER_KEY  = "user";
 
