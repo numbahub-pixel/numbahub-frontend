@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — NumbaHub</title>
-  <!-- 👈 REMOVED THE <base> TAG HERE -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <!-- 👈 ABSOLUTE PATHS (Works perfectly on Localhost & Vercel) -->
+  <link rel="stylesheet" href="/numbahub-user-dashboard/assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -30,19 +31,20 @@
       </div>
 
       <section class="service-grid">
-        <a class="service-item" href="pages/Referral.html">
+        <!-- 👈 ABSOLUTE PATHS FOR LINKS -->
+        <a class="service-item" href="/numbahub-user-dashboard/pages/Referral.html">
           <span class="service-icon icon-violet"><i data-lucide="user-group"></i></span>
           <span style="font-weight:500;">Referral</span>
         </a>
-        <a class="service-item" href="pages/airtime.html">
+        <a class="service-item" href="/numbahub-user-dashboard/pages/airtime.html">
           <span class="service-icon icon-blue"><i data-lucide="phone"></i></span>
           <span style="font-weight:500;">Airtime</span>
         </a>
-        <a class="service-item" href="pages/esim.html">
+        <a class="service-item" href="/numbahub-user-dashboard/pages/esim.html">
           <span class="service-icon icon-orange"><i data-lucide="card-sim"></i></span>
           <span style="font-weight:500;">eSIM</span>
         </a>
-        <a class="service-item" href="pages/giftcards.html">
+        <a class="service-item" href="/numbahub-user-dashboard/pages/giftcards.html">
           <span class="service-icon icon-green"><i data-lucide="gift"></i></span>
           <span style="font-weight:500;">Giftcards</span>
         </a>
@@ -52,7 +54,7 @@
         <div class="card">
           <div class="card-header">
             <h2 class="card-title">Rent numbers <span class="count">0</span></h2>
-            <a class="view-link" href="pages/rent.html">View all</a>
+            <a class="view-link" href="/numbahub-user-dashboard/pages/rent.html">View all</a>
           </div>
           <div class="empty">
             <div><div class="empty-icon"><i data-lucide="search"></i></div><strong>No rental number</strong><p>Your active rental numbers will appear here.</p></div>
@@ -61,7 +63,7 @@
         <div class="card">
           <div class="card-header">
             <h2 class="card-title">eSIMs <span class="count">0</span></h2>
-            <a class="view-link" href="pages/esim.html">View all</a>
+            <a class="view-link" href="/numbahub-user-dashboard/pages/esim.html">View all</a>
           </div>
           <div class="empty">
             <div><div class="empty-icon"><i data-lucide="card-sim"></i></div><strong>No eSIM</strong><p>Your active eSIM plans will appear here.</p></div>
@@ -92,8 +94,9 @@
   </div>
 </div>
 
-<script src="assets/js/api.js"></script>
-<script src="assets/js/main.js"></script>
+<!-- 👈 ABSOLUTE PATHS FOR SCRIPTS -->
+<script src="/numbahub-user-dashboard/assets/js/api.js"></script>
+<script src="/numbahub-user-dashboard/assets/js/main.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {

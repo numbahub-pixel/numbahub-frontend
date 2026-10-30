@@ -27,9 +27,12 @@
   const basePath = () =>
     window.location.pathname.includes("/pages/") ? "../" : "./";
 
-  // 👈 FIX: Removed the .html extension so Vercel's cleanUrls doesn't 404
-  const loginUrl = () => `${basePath()}pages/login`;
+  const loginUrl = () => `${basePath()}pages/login.html`;
 
+  /**
+   * Log the user out and send them to the login page.
+   * @param {"expired"|undefined} reason
+   */
   const logout = (reason) => {
     clearToken();
     setUser(null);
@@ -48,6 +51,12 @@
   }
 
   /* ---------------- main fetch wrapper ---------------- */
+  /**
+   * @param {string} endpoint  e.g. "/auth/login"
+   * @param {object} [options]
+   * @param {boolean} [options.auth=true]  attach bearer token + auto-logout on 401.
+   *                                       Set to false for /auth/login and /auth/register.
+   */
   async function apiFetch(endpoint, options = {}) {
     const { auth = true, ...rest } = options;
     const token = getToken();
@@ -70,6 +79,7 @@
       );
     }
 
+    /* Parse body safely (204 / empty / non-JSON safe) */
     let data = null;
     const raw = await response.text();
     if (raw) {
@@ -77,6 +87,7 @@
       catch { data = { message: raw }; }
     }
 
+    /* Protected call + 401 → session expired, send to login */
     if (response.status === 401 && auth) {
       logout("expired");
       throw new ApiError(
@@ -86,6 +97,7 @@
       );
     }
 
+    /* Any other non-2xx → throw a clean ApiError with backend message */
     if (!response.ok) {
       throw new ApiError(
         data?.message || `Request failed (${response.status}).`,
