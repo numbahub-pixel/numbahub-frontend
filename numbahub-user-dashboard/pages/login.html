@@ -106,7 +106,7 @@
 
           setToken(data.token);
           setUser(data.user);
-        window.location.href = "/numbahub-user-dashboard/";
+          window.location.href = "../index.html";
         } catch (err) {
           // err.message is the backend message, e.g. "Invalid email or password."
           showError(err.message || "Unable to log in. Please try again.");

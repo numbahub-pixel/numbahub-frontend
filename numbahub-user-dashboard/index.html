@@ -4,10 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — NumbaHub</title>
-  
-  <!-- 🟢 THIS IS THE MAGIC FIX -->
-  <base href="/numbahub-user-dashboard/">
-  
+  <!-- 👈 REMOVED THE <base> TAG HERE -->
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -23,10 +20,8 @@
       <section class="balance-card">
         <div>
           <div class="balance-label">Available balance</div>
-          <!-- 👈 REAL BALANCE ID (Now shows $) -->
           <div class="balance" id="walletBalance">$0.00 <span style="font-size:16px;color:#dbeafe;"><i data-lucide="eye"></i></span></div>
         </div>
-        <!-- 👈 FUND WALLET TRIGGER -->
         <button class="primary-button" id="fundWalletBtn"><i data-lucide="plus"></i> Fund wallet</button>
       </section>
 
@@ -43,13 +38,10 @@
           <span class="service-icon icon-blue"><i data-lucide="phone"></i></span>
           <span style="font-weight:500;">Airtime</span>
         </a>
-        
-        <!-- 👈 CHANGED VERIFICATION TO eSIM HERE -->
         <a class="service-item" href="pages/esim.html">
           <span class="service-icon icon-orange"><i data-lucide="card-sim"></i></span>
           <span style="font-weight:500;">eSIM</span>
         </a>
-        
         <a class="service-item" href="pages/giftcards.html">
           <span class="service-icon icon-green"><i data-lucide="gift"></i></span>
           <span style="font-weight:500;">Giftcards</span>
@@ -88,7 +80,6 @@
     <p>Enter the amount you want to add to your NumbaHub wallet. (Note: Payment gateway processes in Naira).</p>
     <div id="modalError" class="hidden text-red-500 text-sm mb-3"></div>
     
-    <!-- 👈 KEPT NAIRA HERE FOR PAYMENT GATEWAY -->
     <div class="input-group">
       <span>₦</span>
       <input type="number" id="fundAmount" placeholder="Min 100" min="100">
