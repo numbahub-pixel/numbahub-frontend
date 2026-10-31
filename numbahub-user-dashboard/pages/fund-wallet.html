@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fund Wallet — NumbaHub</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+<div class="app">
+  <div id="sidebar"></div>
+  <div class="overlay"></div>
+  
+  <div class="main">
+    <main class="container" style="max-width: 650px;">
+      
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <button onclick="window.location.href='../index.html'" class="icon-button"><i data-lucide="arrow-left"></i></button>
+        <h2 style="margin: 0; font-size: 20px; font-weight: 700;">Fund Wallet</h2>
+      </div>
+
+      <div class="premium-card" style="padding: 32px;">
+        
+        <!-- TABS -->
+        <div style="background: #f1f5f9; border-radius: 12px; padding: 6px; display: flex; margin-bottom: 32px;">
+          <button id="tabLocal" class="fund-tab active" onclick="switchTab('local')"><i data-lucide="building-2" style="width: 16px;"></i> Local</button>
+          <button id="tabCrypto" class="fund-tab" onclick="switchTab('crypto')"><i data-lucide="bitcoin" style="width: 16px;"></i> Crypto</button>
+        </div>
+
+        <!-- LOCAL CONTENT -->
+        <div id="contentLocal">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+            <label style="font-weight: 600; font-size: 14px; color: var(--text);">Select currency</label>
+            <span class="muted" style="font-size: 12px;">One currency per deposit</span>
+          </div>
+          
+          <!-- CLICKABLE CURRENCIES WITH REAL FLAGS -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px;">
+            <div class="currency-option active" onclick="selectCurrency('NGN', this)">
+              <img src="https://flagcdn.com/w40/ng.png" style="width: 24px; height: 18px; border-radius: 2px;">
+              <div style="text-align: left; line-height: 1.2;"><b style="font-size: 14px;">NGN</b><br><small style="font-size: 11px; color: var(--muted);">Nigeria Naira</small></div>
+            </div>
+            <div class="currency-option" onclick="selectCurrency('GHS', this)">
+              <img src="https://flagcdn.com/w40/gh.png" style="width: 24px; height: 18px; border-radius: 2px;">
+              <div style="text-align: left; line-height: 1.2;"><b style="font-size: 14px;">GHS</b><br><small style="font-size: 11px; color: var(--muted);">Ghana Cedis</small></div>
+            </div>
+            <div class="currency-option" onclick="selectCurrency('KES', this)">
+              <img src="https://flagcdn.com/w40/ke.png" style="width: 24px; height: 18px; border-radius: 2px;">
+              <div style="text-align: left; line-height: 1.2;"><b style="font-size: 14px;">KES</b><br><small style="font-size: 11px; color: var(--muted);">Kenya Shilling</small></div>
+            </div>
+            <div class="currency-option" onclick="selectCurrency('ZAR', this)">
+              <img src="https://flagcdn.com/w40/za.png" style="width: 24px; height: 18px; border-radius: 2px;">
+              <div style="text-align: left; line-height: 1.2;"><b style="font-size: 14px;">ZAR</b><br><small style="font-size: 11px; color: var(--muted);">South African Rand</small></div>
+            </div>
+            <div class="currency-option" onclick="selectCurrency('XAF', this)">
+              <img src="https://flagcdn.com/w40/cm.png" style="width: 24px; height: 18px; border-radius: 2px;">
+              <div style="text-align: left; line-height: 1.2;"><b style="font-size: 14px;">XAF</b><br><small style="font-size: 11px; color: var(--muted);">CFA Franc</small></div>
+            </div>
+          </div>
+
+          <!-- BIG EDITABLE AMOUNT INPUT -->
+          <div style="text-align: center; margin-bottom: 24px;">
+            <div class="muted" style="margin-bottom: 8px;">Amount</div>
+            <div style="display: flex; align-items: center; justify-content: center; font-size: 56px; font-weight: 800; color: var(--text);">
+              <span>$</span>
+              <input type="number" id="amountInput" value="" placeholder="0" 
+                     style="width: 180px; border: none; outline: none; background: transparent; font-size: 56px; font-weight: 800; text-align: center; color: var(--text);"
+                     oninput="updateConversion()">
+            </div>
+            <div class="muted" id="conversionText" style="font-size: 14px; font-weight: 500;">≈ NGN 0</div>
+            <div class="muted" style="font-size: 12px; margin-top: 8px;">Minimum of $5</div>
+          </div>
+
+          <!-- PRESET BUTTONS -->
+          <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px;">
+            <button class="amount-pill" onclick="setPresetAmount(20)">$20</button>
+            <button class="amount-pill" onclick="setPresetAmount(50)">$50</button>
+            <button class="amount-pill" onclick="setPresetAmount(100)">$100</button>
+            <button class="amount-pill" onclick="setPresetAmount(500)">$500</button>
+            <button class="amount-pill" onclick="setPresetAmount(1000)">$1000</button>
+          </div>
+
+          <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; display: flex; gap: 12px; margin-bottom: 24px;">
+            <i data-lucide="shield-check" style="color: var(--brand);"></i>
+            <div>
+              <div style="font-weight: 600; font-size: 14px; color: #1e3a8a;">Secured and Trusted</div>
+              <div style="font-size: 12px; color: #1e40af;">Your funds are protected with bank-level security via Kora.</div>
+            </div>
+          </div>
+
+          <div id="localError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px; text-align: center;"></div>
+          <button class="btn-premium" id="payLocalBtn">Make Payment</button>
+        </div>
+
+        <!-- CRYPTO CONTENT -->
+        <div id="contentCrypto" style="display: none;">
+          <p class="muted" style="text-align: center; margin-bottom: 24px;">Crypto deposits are currently being upgraded.</p>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+  let currentRate = 1500; 
+  let selectedCurrency = "NGN";
+  let usdAmount = 0;
+
+  // Realistic exchange rates (1 USD = X)
+  const RATES = {
+    NGN: 1500,
+    GHS: 15,
+    KES: 130,
+    ZAR: 18.5,
+    XAF: 600
+  };
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    if (window.lucide) lucide.createIcons();
+
+    try {
+      const rateData = await apiFetch("/currency/rate", { auth: false });
+      currentRate = rateData.rate || 1500;
+      RATES.NGN = currentRate; // Update NGN with live rate
+      updateConversion();
+    } catch(e) {}
+
+    document.getElementById("payLocalBtn").addEventListener("click", async (e) => {
+      const btn = e.target;
+      const errorEl = document.getElementById("localError");
+      
+      if (usdAmount < 5) {
+        errorEl.textContent = "Minimum funding is $5.";
+        errorEl.classList.remove("hidden");
+        return;
+      }
+
+      // Kora only accepts NGN. We convert whatever they selected back to NGN for payment
+      const ngnAmount = Math.round(usdAmount * RATES.NGN);
+
+      btn.disabled = true;
+      btn.textContent = "Initializing...";
+      errorEl.classList.add("hidden");
+
+      try {
+        const data = await apiFetch("/wallet/fund", {
+          method: "POST",
+          body: JSON.stringify({ amount: ngnAmount })
+        });
+        if (data.checkoutUrl) window.location.href = data.checkoutUrl;
+      } catch (error) {
+        errorEl.textContent = error.message;
+        errorEl.classList.remove("hidden");
+        btn.disabled = false;
+        btn.textContent = "Make Payment";
+      }
+    });
+  });
+
+  window.switchTab = (tab) => {
+    document.getElementById("tabLocal").classList.toggle("active", tab === "local");
+    document.getElementById("tabCrypto").classList.toggle("active", tab === "crypto");
+    document.getElementById("contentLocal").style.display = tab === "local" ? "block" : "none";
+    document.getElementById("contentCrypto").style.display = tab === "crypto" ? "block" : "none";
+  };
+
+  window.selectCurrency = (currency, element) => {
+    selectedCurrency = currency;
+    document.querySelectorAll(".currency-option").forEach(el => el.classList.remove("active"));
+    element.classList.add("active");
+    updateConversion();
+  };
+
+  window.setPresetAmount = (amount) => {
+    document.getElementById("amountInput").value = amount;
+    updateConversion();
+    // Highlight active button
+    document.querySelectorAll(".amount-pill").forEach(btn => {
+      btn.style.borderColor = "var(--border)";
+      btn.style.background = "#fff";
+      btn.style.color = "var(--text)";
+    });
+    event.target.style.borderColor = "var(--brand)";
+    event.target.style.background = "#eff6ff";
+    event.target.style.color = "var(--brand)";
+  };
+
+  window.updateConversion = () => {
+    const inputVal = document.getElementById("amountInput").value;
+    usdAmount = parseFloat(inputVal) || 0;
+    const localAmount = usdAmount * RATES[selectedCurrency];
+    
+    document.getElementById("conversionText").textContent = `≈ ${selectedCurrency} ${localAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+</script>
+
+<style>
+  .fund-tab { flex: 1; padding: 12px; border: none; background: transparent; border-radius: 8px; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+  .fund-tab.active { background: #fff; color: var(--text); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  
+  .currency-option { border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.2s; background: #fff; }
+  .currency-option:hover { border-color: #cbd5e1; }
+  .currency-option.active { border-color: var(--brand); background: #eff6ff; }
+  
+  .amount-pill { padding: 8px 20px; border: 1px solid var(--border); border-radius: 20px; background: #fff; font-weight: 600; cursor: pointer; transition: 0.2s; color: var(--text); }
+</style>
+</body>
+</html>

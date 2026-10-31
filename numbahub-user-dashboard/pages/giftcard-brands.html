@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Brand — NumbaHub</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+<div class="app">
+  <div id="sidebar"></div>
+  <div class="overlay"></div>
+  
+  <div class="main">
+    <main class="container">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <button onclick="window.location.href='giftcards.html'" class="icon-button"><i data-lucide="arrow-left"></i></button>
+        <h2 style="margin: 0; font-size: 20px;">Select Brand</h2>
+      </div>
+
+      <div class="grid-3" id="brandGrid">
+        <p>Loading brands...</p>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    if (window.lucide) lucide.createIcons();
+    const grid = document.getElementById("brandGrid");
+    const urlParams = new URLSearchParams(window.location.search);
+    const country = urlParams.get('country');
+
+    if (!country) {
+      grid.innerHTML = `<p style="color:red;">No country selected.</p>`;
+      return;
+    }
+
+    try {
+      const data = await apiFetch(`/giftcard/brands/${country}`);
+      const brands = data.brands || [];
+      
+      if (brands.length === 0) {
+        grid.innerHTML = `<p class="muted" style="grid-column: 1/-1; text-align: center;">No brands available for this country.</p>`;
+        return;
+      }
+
+      grid.innerHTML = brands.map(b => `
+        <div class="product-card" style="cursor: pointer; text-align: center;" onclick="window.location.href='giftcard-products.html?operator=${b.id}'">
+          <div style="height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+            <img src="${b.image}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
+          </div>
+          <h3 style="font-size: 14px; margin: 0;">${b.name}</h3>
+        </div>
+      `).join('');
+    } catch (error) {
+      grid.innerHTML = `<p style="color:red; grid-column: 1/-1;">Failed to load brands: ${error.message}</p>`;
+    }
+  });
+</script>
+</body>
+</html>

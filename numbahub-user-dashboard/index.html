@@ -4,14 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — NumbaHub</title>
-  
-  <!-- 👈 RELATIVE PATH RESTORED -->
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 <div class="app">
-  
   <div id="sidebar"></div>
   <div class="overlay"></div>
   
@@ -23,7 +20,10 @@
           <div class="balance-label">Available balance</div>
           <div class="balance" id="walletBalance">$0.00 <span style="font-size:16px;color:#dbeafe;"><i data-lucide="eye"></i></span></div>
         </div>
-        <button class="primary-button" id="fundWalletBtn"><i data-lucide="plus"></i> Fund wallet</button>
+        <!-- 👈 REDIRECTS TO THE FULL PAGE INSTEAD OF MODAL -->
+        <a href="pages/fund-wallet.html" class="primary-button" style="text-decoration: none;">
+          <i data-lucide="plus"></i> Fund wallet
+        </a>
       </section>
 
       <div class="quickaccess">
@@ -31,7 +31,6 @@
       </div>
 
       <section class="service-grid">
-        <!-- 👈 RELATIVE PATHS RESTORED -->
         <a class="service-item" href="pages/Referral.html">
           <span class="service-icon icon-violet"><i data-lucide="user-group"></i></span>
           <span style="font-weight:500;">Referral</span>
@@ -75,80 +74,11 @@
   </div>
 </div>
 
-<!-- 🟢 FUND WALLET MODAL -->
-<div id="fundModal" class="modal-overlay hidden">
-  <div class="modal-content">
-    <h3>Fund Wallet</h3>
-    <p>Enter the amount you want to add to your NumbaHub wallet. (Note: Payment gateway processes in Naira).</p>
-    <div id="modalError" class="hidden text-red-500 text-sm mb-3"></div>
-    
-    <div class="input-group">
-      <span>₦</span>
-      <input type="number" id="fundAmount" placeholder="Min 100" min="100">
-    </div>
-    
-    <div class="modal-actions">
-      <button class="btn-cancel" id="closeModalBtn">Cancel</button>
-      <button class="btn-pay" id="payKoraBtn">Pay with Kora</button>
-    </div>
-  </div>
-</div>
-
-<!-- 👈 RELATIVE PATHS RESTORED -->
 <script src="assets/js/api.js"></script>
 <script src="assets/js/main.js"></script>
-
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     lucide.createIcons();
-    
-    const modal = document.getElementById("fundModal");
-    const fundBtn = document.getElementById("fundWalletBtn");
-    const closeBtn = document.getElementById("closeModalBtn");
-    const payBtn = document.getElementById("payKoraBtn");
-    const amountInput = document.getElementById("fundAmount");
-    const errorEl = document.getElementById("modalError");
-
-    fundBtn.addEventListener("click", () => {
-      modal.classList.remove("hidden");
-      amountInput.focus();
-      errorEl.classList.add("hidden");
-      amountInput.value = "";
-    });
-
-    closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
-
-    payBtn.addEventListener("click", async () => {
-      errorEl.classList.add("hidden");
-      const amount = Number(amountInput.value);
-
-      if (!amount || amount < 100) {
-        errorEl.textContent = "Minimum funding is ₦100.";
-        errorEl.classList.remove("hidden");
-        return;
-      }
-
-      payBtn.disabled = true;
-      payBtn.textContent = "Initializing...";
-
-      try {
-        const data = await apiFetch("/wallet/fund", {
-          method: "POST",
-          body: JSON.stringify({ amount })
-        });
-
-        if (data.checkoutUrl) {
-          window.location.href = data.checkoutUrl;
-        } else {
-          throw new Error("No checkout URL returned.");
-        }
-      } catch (error) {
-        errorEl.textContent = error.message || "Failed to initialize payment.";
-        errorEl.classList.remove("hidden");
-        payBtn.disabled = false;
-        payBtn.textContent = "Pay with Kora";
-      }
-    });
   });
 </script>
 </body>

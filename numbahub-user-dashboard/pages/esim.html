@@ -3,9 +3,172 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>eSIM Plans — NumbaHub</title>
+  <title>eSIM — NumbaHub</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Premium Custom Dropdown CSS */
+    .custom-dropdown {
+      position: relative;
+      width: 100%;
+    }
+    .dropdown-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .dropdown-trigger:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .dropdown-trigger.active {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(67, 137, 238, 0.1);
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+      z-index: 100;
+      max-height: 300px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+    }
+    .dropdown-menu.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .dropdown-search {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 2;
+    }
+    .dropdown-search input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      font-size: 13px;
+    }
+    .dropdown-list {
+      overflow-y: auto;
+      flex: 1;
+    }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .dropdown-item:hover {
+      background: #f8fafc;
+      color: var(--brand);
+    }
+    
+    /* Premium Tabs */
+    .duration-tab {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+    }
+    .duration-tab:hover {
+      color: var(--text);
+    }
+    .duration-tab.active {
+      border-bottom-color: var(--brand);
+      color: var(--brand);
+    }
+
+    /* Premium eSIM Cards */
+    .esim-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .esim-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px -5px rgba(0,0,0,0.08);
+      border-color: #cbd5e1;
+    }
+    .esim-data {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .esim-validity {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .esim-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .esim-price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .esim-buy-btn {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .esim-buy-btn:hover {
+      background: var(--brand-dark);
+    }
+  </style>
 </head>
 <body>
 <div class="app">
@@ -13,214 +176,268 @@
   <div class="overlay"></div>
   
   <div class="main">
-    <main class="container">
-      <div class="page-heading">
-        <h2>Global eSIM Plans</h2>
-        <p>Stay connected anywhere in the world. Purchase and scan instantly.</p>
+    <main class="container" style="max-width: 900px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <button onclick="window.location.href='../index.html'" class="icon-button"><i data-lucide="arrow-left"></i></button>
+        <h2 style="margin: 0; font-size: 22px; font-weight: 700;">Buy eSIM</h2>
       </div>
 
-      <!-- Skeleton Loader -->
-      <div class="grid-3" id="esimCatalogue">
-        <div class="product-card" style="opacity: 0.5;">
-          <div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div>
-          <div style="height: 30px; width: 30%; background: #e2e8f0; border-radius: 4px; margin-bottom: 10px;"></div>
-          <div style="height: 15px; width: 40%; background: #e2e8f0; border-radius: 4px;"></div>
+      <div class="premium-card" style="padding: 32px; margin-bottom: 32px;">
+        
+        <!-- Custom Dropdown -->
+        <div style="margin-bottom: 32px; position: relative;">
+          <label style="font-weight: 600; font-size: 14px; margin-bottom: 8px; display: block;">Destination Country</label>
+          <div class="custom-dropdown" id="dropdownContainer">
+            <div class="dropdown-trigger" id="dropdownTrigger" onclick="toggleDropdown()">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <img id="selectedFlag" src="https://flagcdn.com/w40/un.png" style="width: 24px; height: 18px; border-radius: 2px; object-fit: cover;">
+                <span id="selectedCountryName" style="font-size: 15px; font-weight: 500; color: var(--text);">Select a country</span>
+              </div>
+              <i data-lucide="chevron-down" style="width: 18px; color: var(--muted);"></i>
+            </div>
+            
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-search">
+                <i data-lucide="search" style="position: absolute; left: 24px; top: 24px; width: 16px; color: var(--muted);"></i>
+                <input type="text" id="countrySearch" placeholder="Search country..." onkeyup="filterCountries()">
+              </div>
+              <div class="dropdown-list" id="countryList">
+                <!-- Options injected here -->
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="product-card" style="opacity: 0.5;">
-          <div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div>
-          <div style="height: 30px; width: 30%; background: #e2e8f0; border-radius: 4px; margin-bottom: 10px;"></div>
-          <div style="height: 15px; width: 40%; background: #e2e8f0; border-radius: 4px;"></div>
+
+        <!-- Tabs -->
+        <div id="durationTabs" style="display: flex; border-bottom: 1px solid var(--border); margin-bottom: 24px;">
+          <button class="duration-tab active" onclick="setDurationTab('All', this)">All Plans</button>
+          <button class="duration-tab" onclick="setDurationTab('Daily', this)">Daily</button>
+          <button class="duration-tab" onclick="setDurationTab('Weekly', this)">Weekly</button>
+          <button class="duration-tab" onclick="setDurationTab('Monthly', this)">Monthly</button>
         </div>
-        <div class="product-card" style="opacity: 0.5;">
-          <div style="height: 20px; width: 50%; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px;"></div>
-          <div style="height: 30px; width: 30%; background: #e2e8f0; border-radius: 4px; margin-bottom: 10px;"></div>
-          <div style="height: 15px; width: 40%; background: #e2e8f0; border-radius: 4px;"></div>
+
+        <!-- Grid -->
+        <div class="grid-3" id="esimGrid">
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px 0;">
+            <i data-lucide="globe" style="width: 48px; height: 48px; color: #cbd5e1; margin-bottom: 16px;"></i>
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Ready to travel?</h3>
+            <p class="muted" style="font-size: 14px;">Select a country above to view available data plans.</p>
+          </div>
         </div>
       </div>
     </main>
   </div>
 </div>
 
-<!-- 🟢 BUY CONFIRMATION MODAL -->
+<!-- PREMIUM BUY MODAL -->
 <div id="buyModal" class="modal-overlay hidden">
-  <div class="modal-content">
-    <h3>Confirm Purchase</h3>
-    <p>You are about to buy the <strong id="confirmPlanName">eSIM</strong> plan.</p>
+  <div class="modal-content" style="text-align: left;">
+    <h3 style="text-align: center; margin-bottom: 24px;">Confirm Purchase</h3>
     
-    <div style="background: #f8fafc; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
-      <div style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">Total Price</div>
-      <div style="font-size: 24px; font-weight: 700;" id="confirmPrice">$0.00</div>
+    <div style="background: #f8fafc; padding: 20px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+        <span class="muted" style="font-size: 14px;">Plan</span>
+        <strong id="modalPlanName" style="font-size: 14px;">1 GB / 7 Days</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span class="muted" style="font-size: 14px;">Total Price</span>
+        <strong id="modalPlanPrice" style="font-size: 20px; color: var(--brand);">$0.00</strong>
+      </div>
     </div>
-
-    <div id="buyError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px;"></div>
+    
+    <div id="modalError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px; text-align: center;"></div>
     
     <div class="modal-actions">
-      <button class="btn-cancel" id="cancelBuyBtn">Cancel</button>
+      <button class="btn-cancel" onclick="document.getElementById('buyModal').classList.add('hidden')">Cancel</button>
       <button class="btn-pay" id="confirmBuyBtn">Pay Now</button>
     </div>
   </div>
 </div>
 
-<!-- 🟢 SUCCESS / QR CODE MODAL -->
+<!-- PREMIUM SUCCESS MODAL -->
 <div id="successModal" class="modal-overlay hidden">
   <div class="modal-content">
-    <div style="width: 60px; height: 60px; background: #dcfce7; color: #166534; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px; font-size: 24px;">
-      ✓
+    <div style="width: 64px; height: 64px; background: #dcfce7; color: #166534; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 20px; font-size: 28px;">
+      <i data-lucide="check"></i>
     </div>
-    <h3>eSIM Ready!</h3>
-    <p>Scan the QR code below using your phone's camera or eSIM settings to activate.</p>
+    <h3 style="margin-bottom: 8px;">Payment Successful!</h3>
+    <p>Scan the QR code below in your phone's eSIM settings.</p>
     
-    <div style="background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 24px; display: inline-block;">
-      <img id="qrCodeImage" src="" alt="eSIM QR Code" style="width: 180px; height: 180px; display: block;">
-    </div>
-
-    <div style="text-align: left; background: #f8fafc; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
-      <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">ICCID</div>
-      <div style="font-size: 14px; font-weight: 600; word-break: break-all; margin-bottom: 12px;" id="esimIccid">...</div>
-      
-      <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Manual Activation Code</div>
-      <div style="font-size: 14px; font-weight: 600; word-break: break-all;" id="esimManualCode">...</div>
+    <div style="padding: 16px; border: 1px solid var(--border); border-radius: 16px; display: inline-block; margin-bottom: 24px;">
+      <img id="qrCodeImage" src="" style="width: 200px; height: 200px; display: block;">
     </div>
     
-    <button class="btn-pay" style="width: 100%;" onclick="window.location.href='history.html'">
-      Go to History
-    </button>
+    <button class="btn-pay" style="width: 100%;" onclick="window.location.href='history.html'">View My eSIMs</button>
   </div>
 </div>
 
 <script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
-
 <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const grid = document.getElementById("esimCatalogue");
-    
-    const buyModal = document.getElementById("buyModal");
-    const confirmPlanName = document.getElementById("confirmPlanName");
-    const confirmPrice = document.getElementById("confirmPrice");
-    const cancelBuyBtn = document.getElementById("cancelBuyBtn");
-    const confirmBuyBtn = document.getElementById("confirmBuyBtn");
-    const buyError = document.getElementById("buyError");
-    const successModal = document.getElementById("successModal");
-    
-    let currentSelectedPlan = null;
+  let allBundles = [];
+  let allCountriesList = [];
+  let currentDuration = "All";
+  let selectedPlan = null;
 
-    // 1. Fetch Catalogue
+  document.addEventListener("DOMContentLoaded", async () => {
+    if (window.lucide) lucide.createIcons();
+    
     try {
       const data = await apiFetch("/esim/catalogue");
-      const bundles = data.catalogue?.bundles || [];
+      allBundles = data.catalogue?.bundles || [];
       
-      if (bundles.length === 0) {
-        grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">No eSIM plans available right now.</p>`;
-        return;
-      }
-
-      // 2. Render Cards
-      grid.innerHTML = bundles.slice(0, 24).map((plan, index) => {
-        return `
-        <div class="product-card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>${plan.countries[0].name} ${plan.countries.length > 1 ? '+ ' + (plan.countries.length - 1) + ' more' : ''}</h3>
-            <span class="count">eSIM</span>
-          </div>
-          <div class="product-price">${plan.dataAmount / 1000} GB</div>
-          <div class="muted">${plan.duration} Days Validity</div>
-          
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top: 1px solid var(--border); padding-top: 16px;">
-            <div>
-              <div style="font-size: 11px; color: var(--muted);">Price</div>
-              <strong style="font-size: 18px;">$${plan.price.toFixed(2)}</strong>
-            </div>
-            <button class="blue-button buy-esim-btn" 
-              data-index="${index}"
-              data-code="${plan.name}" 
-              data-price="${plan.price}" 
-              data-name="${plan.countries[0].name} - ${plan.dataAmount / 1000}GB"
-              style="padding: 10px 16px;">
-              Buy Plan
-            </button>
-          </div>
-        </div>
-      `}).join('');
-
-      // 3. Attach Event Listeners to Buy Buttons
-      document.querySelectorAll(".buy-esim-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          const button = e.currentTarget;
-          currentSelectedPlan = {
-            code: button.dataset.code,
-            price: Number(button.dataset.price),
-            name: button.dataset.name
-          };
-
-          confirmPlanName.textContent = currentSelectedPlan.name;
-          confirmPrice.textContent = `$${currentSelectedPlan.price.toFixed(2)}`;
-          buyError.classList.add("hidden");
-          buyModal.classList.remove("hidden");
-        });
+      const countriesMap = {};
+      allBundles.forEach(b => {
+        if (b.countries && b.countries.length > 0) {
+          const c = b.countries[0];
+          countriesMap[c.iso] = { name: c.name, iso: c.iso };
+        }
       });
 
+      allCountriesList = Object.values(countriesMap).sort((a,b) => a.name.localeCompare(b.name));
+      renderDropdownList(allCountriesList);
+
     } catch (error) {
-      console.error("eSIM Load Error:", error);
-      grid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: #fff; border-radius: 16px;">
-          <p style="color: #ef4444; font-weight: 600;">Failed to load catalogue</p>
-          <p style="color: var(--muted); font-size: 14px;">${error.message}</p>
-          <button class="blue-button" style="margin: 20px auto 0;" onclick="window.location.reload()">Try Again</button>
-        </div>
-      `;
+      console.error(error);
+    }
+  });
+
+  // --- CUSTOM DROPDOWN LOGIC ---
+  window.toggleDropdown = () => {
+    const menu = document.getElementById("dropdownMenu");
+    const trigger = document.getElementById("dropdownTrigger");
+    menu.classList.toggle("show");
+    trigger.classList.toggle("active");
+    if (menu.classList.contains("show")) {
+      document.getElementById("countrySearch").focus();
+    }
+  };
+
+  function renderDropdownList(countries) {
+    const list = document.getElementById("countryList");
+    list.innerHTML = countries.map(c => `
+      <div class="dropdown-item" onclick="selectCountry('${c.iso}', '${c.name}')">
+        <img src="https://flagcdn.com/w40/${c.iso.toLowerCase()}.png" style="width: 24px; height: 18px; border-radius: 2px; object-fit: cover;">
+        <span>${c.name}</span>
+      </div>
+    `).join('');
+  }
+
+  window.filterCountries = () => {
+    const query = document.getElementById("countrySearch").value.toLowerCase();
+    const filtered = allCountriesList.filter(c => c.name.toLowerCase().includes(query));
+    renderDropdownList(filtered);
+  };
+
+  window.selectCountry = (iso, name) => {
+    document.getElementById("dropdownMenu").classList.remove("show");
+    document.getElementById("dropdownTrigger").classList.remove("active");
+    
+    document.getElementById("selectedCountryName").textContent = name;
+    document.getElementById("selectedFlag").src = `https://flagcdn.com/w40/${iso.toLowerCase()}.png`;
+    
+    document.getElementById("dropdownTrigger").dataset.iso = iso;
+    renderPackages();
+  };
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    const container = document.getElementById("dropdownContainer");
+    if (container && !container.contains(e.target)) {
+      document.getElementById("dropdownMenu").classList.remove("show");
+      document.getElementById("dropdownTrigger").classList.remove("active");
+    }
+  });
+
+  // --- TABS & RENDERING LOGIC ---
+  window.setDurationTab = (duration, btn) => {
+    currentDuration = duration;
+    document.querySelectorAll(".duration-tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderPackages();
+  };
+
+  window.renderPackages = () => {
+    const iso = document.getElementById("dropdownTrigger").dataset.iso;
+    const grid = document.getElementById("esimGrid");
+    
+    if (!iso) return;
+
+    let filtered = allBundles.filter(b => b.countries.some(c => c.iso === iso));
+
+    if (currentDuration !== "All") {
+      filtered = filtered.filter(b => {
+        const days = b.duration;
+        if (currentDuration === "Daily") return days <= 7;
+        if (currentDuration === "Weekly") return days > 7 && days <= 30;
+        if (currentDuration === "Monthly") return days > 30;
+        return true;
+      });
     }
 
-    // 4. Handle Modal Actions
-    cancelBuyBtn.addEventListener("click", () => {
-      buyModal.classList.add("hidden");
-      currentSelectedPlan = null;
-    });
+    filtered.sort((a, b) => a.dataAmount - b.dataAmount);
 
-    confirmBuyBtn.addEventListener("click", async () => {
-      if (!currentSelectedPlan) return;
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px 0;">
+          <p class="muted">No plans match this filter. Try selecting "All Plans".</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(plan => `
+      <div class="esim-card">
+        <div>
+          <div class="esim-data">${plan.dataAmount >= 1000 ? plan.dataAmount/1000 + ' GB' : plan.dataAmount + ' MB'}</div>
+          <div class="esim-validity">Valid for ${plan.duration} days</div>
+        </div>
+        
+        <div class="esim-price-row">
+          <div class="esim-price">$${plan.price.toFixed(2)}</div>
+          <button class="esim-buy-btn" onclick="openBuyModal('${plan.name}', ${plan.price}, '${plan.dataAmount/1000}GB / ${plan.duration} Days')">Buy Now</button>
+        </div>
+      </div>
+    `).join('');
+  };
+
+  // --- PURCHASE LOGIC ---
+  window.openBuyModal = (code, price, displayName) => {
+    selectedPlan = { code, price };
+    document.getElementById("modalPlanName").textContent = displayName;
+    document.getElementById("modalPlanPrice").textContent = `$${price.toFixed(2)}`;
+    document.getElementById("buyModal").classList.remove("hidden");
+  };
+
+  document.getElementById("confirmBuyBtn").addEventListener("click", async (e) => {
+    const btn = e.target;
+    btn.disabled = true;
+    btn.textContent = "Processing...";
+    
+    try {
+      const response = await apiFetch("/esim/buy", {
+        method: "POST",
+        body: JSON.stringify({ bundleCode: selectedPlan.code, price: selectedPlan.price })
+      });
       
-      buyError.classList.add("hidden");
-      confirmBuyBtn.disabled = true;
-      confirmBuyBtn.textContent = "Processing...";
-
-      try {
-        const response = await apiFetch("/esim/buy", {
-          method: "POST",
-          body: JSON.stringify({ 
-            bundleCode: currentSelectedPlan.code, 
-            price: currentSelectedPlan.price // Sending USD price to backend
-          })
-        });
-
-        buyModal.classList.add("hidden");
-        
-        const esim = response.esimDetails;
-
-        const qrImageSrc = esim.qrCode 
-          ? esim.qrCode 
-          : `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(esim.manualActivationCode)}`;
-
-        document.getElementById("qrCodeImage").src = qrImageSrc;
-        document.getElementById("esimIccid").textContent = esim.iccid;
-        document.getElementById("esimManualCode").textContent = esim.manualActivationCode;
-        
-        successModal.classList.remove("hidden");
-        
-        const cachedUser = getUser();
-        if (cachedUser) {
-          cachedUser.walletBalance = response.walletBalance;
-          setUser(cachedUser);
-        }
-
-      } catch (err) {
-        buyError.textContent = err.message || "Failed to purchase eSIM.";
-        buyError.classList.remove("hidden");
-      } finally {
-        confirmBuyBtn.disabled = false;
-        confirmBuyBtn.textContent = "Pay Now";
+      document.getElementById("buyModal").classList.add("hidden");
+      
+      const esim = response.esimDetails;
+      const qrImageSrc = esim.qrCode || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(esim.manualActivationCode)}`;
+      document.getElementById("qrCodeImage").src = qrImageSrc;
+      document.getElementById("successModal").classList.remove("hidden");
+      
+      // Update balance locally
+      const cachedUser = getUser();
+      if (cachedUser) {
+        cachedUser.walletBalance = response.walletBalance;
+        setUser(cachedUser);
       }
-    });
+    } catch (err) {
+      document.getElementById("modalError").textContent = err.message;
+      document.getElementById("modalError").classList.remove("hidden");
+      btn.disabled = false;
+      btn.textContent = "Pay Now";
+    }
   });
 </script>
 </body>
