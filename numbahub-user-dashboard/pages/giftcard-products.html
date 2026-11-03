@@ -6,6 +6,59 @@
   <title>Select Amount — NumbaHub</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .giftcard-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .giftcard-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px -5px rgba(0,0,0,0.08);
+      border-color: #cbd5e1;
+    }
+    .gc-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .gc-price-usd {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--brand);
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+    .gc-price-ngn {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    .gc-btn {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+    }
+    .gc-btn:hover {
+      background: var(--brand-dark);
+    }
+  </style>
 </head>
 <body>
 <div class="app">
@@ -26,23 +79,30 @@
   </div>
 </div>
 
-<!-- PURCHASE MODAL -->
+<!-- PREMIUM PURCHASE MODAL -->
 <div id="buyGcModal" class="modal-overlay hidden">
-  <div class="modal-content">
-    <h3>Confirm Purchase</h3>
-    <p>You are buying <strong id="gcConfirmName">Gift Card</strong>.</p>
+  <div class="modal-content" style="text-align: left;">
+    <h3 style="text-align: center; margin-bottom: 24px;">Confirm Purchase</h3>
     
-    <div style="background: #f8fafc; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
-      <div style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">Total Price</div>
-      <div style="font-size: 24px; font-weight: 700; color: var(--brand);" id="gcConfirmPrice">₦0.00</div>
+    <div style="background: #f8fafc; padding: 20px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 24px;">
+      <div style="font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 16px; text-align: center;" id="gcConfirmName">Gift Card</div>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="muted" style="font-size: 14px;">Card Value</span>
+        <strong style="font-size: 16px;" id="gcConfirmUsd">$0</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 12px; margin-top: 12px;">
+        <span class="muted" style="font-size: 14px;">Total Deduction</span>
+        <strong style="font-size: 20px; color: var(--brand);" id="gcConfirmPrice">₦0.00</strong>
+      </div>
     </div>
 
-    <div style="text-align: left; margin-bottom: 20px;">
-      <label style="font-size: 13px; font-weight: 500; margin-bottom: 6px; display: block;">Recipient Email</label>
-      <input type="email" id="gcEmail" placeholder="Enter email for delivery" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
+    <div style="margin-bottom: 20px;">
+      <label style="font-size: 13px; font-weight: 600; margin-bottom: 8px; display: block;">Recipient Email</label>
+      <input type="email" id="gcEmail" placeholder="Enter email for delivery" style="width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 10px; outline: none; background: #f8fafc;">
     </div>
 
-    <div id="gcError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px;"></div>
+    <div id="gcError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px; text-align: center;"></div>
     
     <div class="modal-actions">
       <button class="btn-cancel" id="cancelGcBtn">Cancel</button>
@@ -55,6 +115,14 @@
 <script src="../assets/js/main.js"></script>
 <script>
   let selectedGcData = null;
+
+  // 🟢 HELPER: Formats price smartly. 
+  // 5 -> "$5", 5.5 -> "$5.50"
+  function formatPrice(amount) {
+    const num = Number(amount);
+    if (isNaN(num)) return "0";
+    return num % 1 === 0 ? num.toString() : num.toFixed(2);
+  }
 
   document.addEventListener("DOMContentLoaded", async () => {
     if (window.lucide) lucide.createIcons();
@@ -74,16 +142,23 @@
         throw new Error("Gift cards are currently out of stock for this brand.");
       }
 
-      grid.innerHTML = data.products.map(p => `
-        <div class="product-card" style="padding: 24px; text-align: center;">
-          <h3 style="font-size: 18px; margin-bottom: 8px;">${p.name}</h3>
-          <div style="font-size: 20px; font-weight: 800; color: var(--brand); margin-bottom: 20px;">₦${p.ngn.toLocaleString()}</div>
-          <button class="blue-button" style="width: 100%;" 
-            onclick="openBuyModal('${p.id}', '${operatorId}', ${p.ngn}, '${p.name}')">
+      grid.innerHTML = data.products.map(p => {
+        // Fallback: If Billpoint API didn't return USD, calculate from Naira
+        const usdValue = p.usd ? p.usd : (p.ngn / 1500); 
+        
+        return `
+        <div class="giftcard-item">
+          <div>
+            <div class="gc-title">${p.name}</div>
+            <div class="gc-price-usd">$${formatPrice(usdValue)}</div>
+            <div class="gc-price-ngn">≈ ₦${p.ngn.toLocaleString()}</div>
+          </div>
+          <button class="gc-btn" 
+            onclick="openBuyModal('${p.id}', '${operatorId}', ${p.ngn}, ${usdValue}, '${p.name}')">
             Buy Card
           </button>
         </div>
-      `).join('');
+      `}).join('');
     } catch (e) { 
       grid.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
@@ -94,10 +169,11 @@
     }
   });
 
-  window.openBuyModal = (productId, operatorId, price, name) => {
-    selectedGcData = { productId, operatorId, price, name };
+  window.openBuyModal = (productId, operatorId, priceNgn, priceUsd, name) => {
+    selectedGcData = { productId, operatorId, priceNgn, priceUsd, name };
     document.getElementById("gcConfirmName").textContent = name;
-    document.getElementById("gcConfirmPrice").textContent = `₦${price.toLocaleString()}`;
+    document.getElementById("gcConfirmUsd").textContent = `$${formatPrice(priceUsd)}`;
+    document.getElementById("gcConfirmPrice").textContent = `₦${priceNgn.toLocaleString()}`;
     document.getElementById("gcEmail").value = "";
     document.getElementById("gcError").classList.add("hidden");
     document.getElementById("buyGcModal").classList.remove("hidden");
@@ -129,7 +205,8 @@
         body: JSON.stringify({ 
           productId: selectedGcData.productId, 
           operatorId: selectedGcData.operatorId, 
-          amount: selectedGcData.price, 
+          // 🟢 FIXED: Sending USD to the backend, because backend multiplies by 1500
+          amount: selectedGcData.priceUsd, 
           email 
         })
       });

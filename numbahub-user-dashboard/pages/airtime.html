@@ -3,68 +3,252 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Airtime — NumbaHub</title>
+  <title>Airtime & Data — NumbaHub</title>
   <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .operator-tabs { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .operator-tab {
+      padding: 12px 20px; border: 1px solid var(--border); border-radius: 12px; background: #fff;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .operator-tab.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+    
+    .amount-pills { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .amount-pill {
+      padding: 10px 20px; border: 1px solid var(--border); border-radius: 20px; background: #fff;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .amount-pill:hover, .amount-pill.active { border-color: var(--brand); background: #eff6ff; color: var(--brand); }
+  </style>
 </head>
 <body>
 <div class="app">
   <div id="sidebar"></div>
   <div class="overlay"></div>
+  
   <div class="main">
-    <main class="container">
-      <div class="page-heading"><h2>Airtime</h2><p>Buy airtime for supported networks.</p></div>
-      <div class="card">
-        <div class="form-grid">
-          <div class="field">
-            <label>Network</label>
-            <select class="select" id="network">
-              <option value="MTN">MTN</option>
-              <option value="AIRTEL">Airtel</option>
-              <option value="GLO">Glo</option>
-              <option value="9MOBILE">9mobile</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Phone number</label>
-            <input class="input" id="phone" placeholder="080...">
-          </div>
-          <div class="field">
-            <label>Amount (₦)</label>
-            <input class="input" id="amount" type="number" placeholder="1000">
+    <main class="container" style="max-width: 700px;">
+      <div class="page-heading">
+        <h2>Airtime & Data</h2>
+        <p>Top up any mobile number, anywhere in the world.</p>
+      </div>
+
+      <div class="premium-card" style="padding: 32px;">
+        
+        <!-- Country Selection -->
+        <div class="premium-form-group">
+          <label>Destination Country</label>
+          <select class="premium-select" id="countrySelect" onchange="loadOperators()">
+            <option value="">Loading countries...</option>
+          </select>
+        </div>
+
+        <!-- Operator Selection (Dynamic) -->
+        <div class="premium-form-group" style="margin-top: 24px;">
+          <label>Select Operator</label>
+          <div class="operator-tabs" id="operatorTabs">
+            <p class="muted">Select a country to see operators.</p>
           </div>
         </div>
-        <button class="blue-button" id="buyBtn" style="margin-top:20px;">Continue</button>
+
+        <!-- Phone & Amount -->
+        <div class="premium-form-group">
+          <label>Recipient Phone Number</label>
+          <div class="input-wrapper">
+            <i data-lucide="phone" class="input-icon"></i>
+            <input class="premium-input" id="phoneNumber" type="tel" placeholder="e.g. 08012345678">
+          </div>
+        </div>
+
+        <div class="premium-form-group">
+          <label>Amount (USD)</label>
+          <div class="input-wrapper">
+            <i data-lucide="dollar-sign" class="input-icon"></i>
+            <input class="premium-input" id="amountInput" type="number" placeholder="Enter amount in USD" oninput="updateAmount()">
+          </div>
+          <div class="amount-pills">
+            <button class="amount-pill" onclick="setAmount(5)">$5</button>
+            <button class="amount-pill" onclick="setAmount(10)">$10</button>
+            <button class="amount-pill" onclick="setAmount(25)">$25</button>
+            <button class="amount-pill" onclick="setAmount(50)">$50</button>
+          </div>
+        </div>
+
+        <!-- Live Conversion -->
+        <div id="priceBox" class="price-receipt hidden" style="margin-top: 24px;">
+          <div>
+            <div class="price-receipt-label">Total Deduction</div>
+            <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">From your NGN wallet</div>
+          </div>
+          <div id="totalCostNgn" class="price-receipt-value">₦0.00</div>
+        </div>
+
+        <div id="formError" class="hidden text-red-500" style="font-size: 14px; margin-top: 16px; text-align: center;"></div>
+
+        <button class="btn-premium" id="buyBtn" style="margin-top: 24px;">
+          Purchase Airtime <i data-lucide="arrow-right"></i>
+        </button>
       </div>
     </main>
   </div>
 </div>
-<script src="../assets/js/main.js"></script>
+
+<!-- CONFIRMATION MODAL -->
+<div id="confirmModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <h3>Confirm Top-Up</h3>
+    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span class="muted">Recipient</span>
+        <strong id="modalPhone">-</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span class="muted">Total Charge</span>
+        <strong style="color: var(--brand);" id="modalPrice">₦0.00</strong>
+      </div>
+    </div>
+    <div id="modalError" class="hidden text-red-500" style="font-size: 14px; margin-bottom: 12px;"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="document.getElementById('confirmModal').classList.add('hidden')">Cancel</button>
+      <button class="btn-pay" id="confirmBuyBtn">Confirm & Pay</button>
+    </div>
+  </div>
+</div>
+
 <script src="../assets/js/api.js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../assets/js/main.js"></script>
 <script>
-  document.getElementById("buyBtn").addEventListener("click", async () => {
-    const network = document.getElementById("network").value;
-    const phone = document.getElementById("phone").value;
-    const amount = document.getElementById("amount").value;
+  let selectedOperator = null;
+  let allOperators = [];
+  const EXCHANGE_RATE = 1500; // Frontend calculation
 
-    if (!phone || !amount) return alert("Please fill in all fields");
+  document.addEventListener("DOMContentLoaded", async () => {
+    if (window.lucide) lucide.createIcons();
+    const countrySelect = document.getElementById("countrySelect");
 
-    const btn = document.getElementById("buyBtn");
-    btn.textContent = "Processing...";
+    try {
+      // Fetch countries from Reloadly API (via backend)
+      const data = await apiFetch("/airtime/countries");
+      if (data.countries && data.countries.length > 0) {
+        countrySelect.innerHTML = `<option value="">Select a country</option>` + 
+          data.countries.map(c => `<option value="${c.isoCode}">${c.name}</option>`).join('');
+      } else {
+        countrySelect.innerHTML = `<option value="">No countries available</option>`;
+      }
+    } catch (error) {
+      countrySelect.innerHTML = `<option value="">Failed to load countries</option>`;
+    }
+  });
+
+  window.loadOperators = async () => {
+    const countryCode = document.getElementById("countrySelect").value;
+    const tabsContainer = document.getElementById("operatorTabs");
+    
+    if (!countryCode) {
+      tabsContainer.innerHTML = `<p class="muted">Please select a country first.</p>`;
+      return;
+    }
+
+    tabsContainer.innerHTML = `<p class="muted">Loading operators...</p>`;
+
+    try {
+      const data = await apiFetch(`/airtime/operators/${countryCode}`);
+      allOperators = data.operators || [];
+      
+      if (allOperators.length === 0) {
+        tabsContainer.innerHTML = `<p class="muted">No operators available for this country.</p>`;
+        return;
+      }
+
+      tabsContainer.innerHTML = allOperators.map(op => `
+        <button class="operator-tab" onclick="selectOperator('${op.id}', '${op.name}')">
+          ${op.name}
+        </button>
+      `).join('');
+
+    } catch (error) {
+      tabsContainer.innerHTML = `<p class="text-red-500">Failed to load operators: ${error.message}</p>`;
+    }
+  };
+
+  window.selectOperator = (id, name) => {
+    selectedOperator = { id, name };
+    document.querySelectorAll(".operator-tab").forEach(tab => {
+      if (tab.textContent.trim() === name) tab.classList.add("active");
+      else tab.classList.remove("active");
+    });
+  };
+
+  window.setAmount = (amount) => {
+    document.getElementById("amountInput").value = amount;
+    updateAmount();
+    document.querySelectorAll(".amount-pill").forEach(pill => {
+      pill.classList.toggle("active", pill.textContent === `$${amount}`);
+    });
+  };
+
+  window.updateAmount = () => {
+    const amountUsd = parseFloat(document.getElementById("amountInput").value) || 0;
+    const priceBox = document.getElementById("priceBox");
+    const totalCostNgn = document.getElementById("totalCostNgn");
+
+    if (amountUsd > 0) {
+      const ngnAmount = amountUsd * EXCHANGE_RATE;
+      totalCostNgn.textContent = `₦${ngnAmount.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`;
+      priceBox.classList.remove("hidden");
+    } else {
+      priceBox.classList.add("hidden");
+    }
+  };
+
+  document.getElementById("buyBtn").addEventListener("click", () => {
+    const phone = document.getElementById("phoneNumber").value.trim();
+    const amount = parseFloat(document.getElementById("amountInput").value);
+    const errorEl = document.getElementById("formError");
+
+    if (!selectedOperator || !phone || !amount) {
+      errorEl.textContent = "Please select an operator and fill in all fields.";
+      errorEl.classList.remove("hidden");
+      return;
+    }
+
+    document.getElementById("modalPhone").textContent = phone;
+    document.getElementById("modalPrice").textContent = document.getElementById("totalCostNgn").textContent;
+    document.getElementById("modalError").classList.add("hidden");
+    document.getElementById("confirmModal").classList.remove("hidden");
+  });
+
+  document.getElementById("confirmBuyBtn").addEventListener("click", async (e) => {
+    const btn = e.target;
+    const originalText = btn.textContent;
+    const phone = document.getElementById("phoneNumber").value.trim();
+    const amountUsd = parseFloat(document.getElementById("amountInput").value);
+    const modalError = document.getElementById("modalError");
+
     btn.disabled = true;
+    btn.textContent = "Processing...";
+    modalError.classList.add("hidden");
 
     try {
       await apiFetch("/airtime/buy", {
         method: "POST",
-        body: JSON.stringify({ network, phone, amount: Number(amount) }),
+        body: JSON.stringify({
+          operatorId: selectedOperator.id,
+          phone,
+          amountUsd,
+        }),
       });
-      alert("Airtime purchased successfully!");
+
+      document.getElementById("confirmModal").classList.add("hidden");
+      alert("Airtime purchased successfully! Check History.");
       window.location.href = "history.html";
+
     } catch (err) {
-      alert(err.message || "Failed to purchase airtime.");
-    } finally {
-      btn.textContent = "Continue";
+      modalError.textContent = err.message || "Failed to purchase airtime.";
+      modalError.classList.remove("hidden");
       btn.disabled = false;
+      btn.textContent = originalText;
     }
   });
 </script>

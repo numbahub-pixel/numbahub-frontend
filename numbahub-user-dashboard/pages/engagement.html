@@ -6,6 +6,52 @@
   <title>Engagement Hub — NumbaHub</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Premium Custom Dropdown */
+    .custom-select-wrapper { position: relative; width: 100%; }
+    .custom-select-trigger {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; height: 54px; padding: 0 16px 0 44px;
+      border: 1px solid #cbd5e1; border-radius: 12px; background: #f8fafc;
+      font-size: 15px; font-weight: 500; color: var(--text);
+      cursor: pointer; transition: all 0.2s ease; outline: none;
+    }
+    .custom-select-trigger:hover { border-color: var(--brand); }
+    .custom-select-trigger.active { border-color: var(--brand); background: #fff; box-shadow: 0 0 0 4px rgba(67, 137, 238, 0.1); }
+    
+    .custom-options {
+      position: absolute; top: calc(100% + 8px); left: 0; width: 100%;
+      background: #fff; border: 1px solid var(--border); border-radius: 12px;
+      box-shadow: 0 10px 30px -5px rgba(0,0,0,0.15); z-index: 100;
+      max-height: 350px; display: flex; flex-direction: column; overflow: hidden;
+      opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease;
+    }
+    .custom-options.show { opacity: 1; visibility: visible; transform: translateY(0); }
+    
+    .search-box { padding: 12px; border-bottom: 1px solid var(--border); background: #fff; position: sticky; top: 0; z-index: 2; }
+    .search-box input { width: 100%; padding: 12px 12px 12px 36px; border: 1px solid var(--border); border-radius: 8px; outline: none; font-size: 14px; }
+    .search-box i { position: absolute; left: 24px; top: 26px; width: 16px; color: var(--muted); }
+    
+    .options-list { overflow-y: auto; flex: 1; }
+    .option-item {
+      padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9;
+      transition: background 0.2s; display: flex; flex-direction: column; gap: 4px;
+    }
+    .option-item:last-child { border-bottom: none; }
+    .option-item:hover { background: #f8fafc; }
+    .option-item.selected { background: #eff6ff; border-left: 3px solid var(--brand); }
+    .option-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .option-meta { font-size: 12px; color: var(--muted); display: flex; gap: 12px; }
+    
+    /* Live Price Box */
+    .price-receipt {
+      background: linear-gradient(145deg, #f8fafc 0%, #eff6ff 100%);
+      border: 1px dashed #bfdbfe; border-radius: 16px; padding: 24px;
+      margin-top: 24px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .price-receipt-value { font-size: 28px; font-weight: 800; color: var(--brand); letter-spacing: -0.5px; }
+    .price-receipt-ngn { font-size: 14px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+  </style>
 </head>
 <body>
 <div class="app">
@@ -21,16 +67,27 @@
         <p>Boost your social media presence with real, high-quality engagement.</p>
       </div>
 
-      <div class="premium-card">
+      <div class="premium-card" style="max-width: 650px; margin: 0 auto;">
         
-        <!-- Service Dropdown -->
+        <!-- Service Custom Dropdown -->
         <div class="premium-form-group">
           <label><i data-lucide="layers" style="width: 16px; color: var(--brand);"></i> Select Service</label>
-          <div class="input-wrapper">
-            <i data-lucide="layout-grid" class="input-icon"></i>
-            <select class="premium-select" id="serviceSelect">
-              <option value="">Loading available services...</option>
-            </select>
+          <div class="custom-select-wrapper" id="dropdownWrapper">
+            <i data-lucide="layout-grid" style="position: absolute; left: 16px; top: 18px; color: #94a3b8; width: 18px;"></i>
+            <div class="custom-select-trigger" id="selectTrigger" onclick="toggleDropdown()">
+              <span id="selectedServiceText">Loading available services...</span>
+              <i data-lucide="chevron-down" style="width: 18px; color: #94a3b8;"></i>
+            </div>
+            
+            <div class="custom-options" id="optionsMenu">
+              <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" id="serviceSearch" placeholder="Search Instagram followers, TikTok likes..." onkeyup="filterOptions()">
+              </div>
+              <div class="options-list" id="optionsList">
+                <!-- Options injected here -->
+              </div>
+            </div>
           </div>
         </div>
 
@@ -57,14 +114,14 @@
         <div id="priceBox" class="price-receipt hidden">
           <div>
             <div class="price-receipt-label">Total Charge</div>
-            <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Deducted from wallet</div>
+            <div class="price-receipt-ngn" id="totalCostNgn">≈ ₦0.00</div>
           </div>
-          <div id="totalCost" class="price-receipt-value">₦0.00</div>
+          <div id="totalCostUsd" class="price-receipt-value">$0.00</div>
         </div>
 
         <div id="formError" class="hidden text-red-500" style="font-size: 14px; margin-top: 16px; text-align: center;"></div>
 
-        <button class="btn-premium" id="orderBtn">
+        <button class="btn-premium" id="orderBtn" style="margin-top: 24px;">
           Proceed to Payment <i data-lucide="arrow-right"></i>
         </button>
       </div>
@@ -72,7 +129,7 @@
   </div>
 </div>
 
-<!-- 🟢 CONFIRMATION MODAL -->
+<!-- CONFIRMATION MODAL -->
 <div id="confirmModal" class="modal-overlay hidden">
   <div class="modal-content">
     <div style="width: 60px; height: 60px; background: #eff6ff; color: var(--brand); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px;">
@@ -90,7 +147,10 @@
       
       <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 16px;">
         <span style="font-size: 14px; font-weight: 600; color: var(--text);">Total Charge:</span>
-        <span style="font-size: 22px; font-weight: 800; color: var(--brand);" id="modalPrice">₦0.00</span>
+        <div style="text-align: right;">
+          <span style="font-size: 22px; font-weight: 800; color: var(--brand);" id="modalPriceUsd">$0.00</span>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 4px;" id="modalPriceNgn">≈ ₦0.00</div>
+        </div>
       </div>
     </div>
 
@@ -103,18 +163,13 @@
   </div>
 </div>
 
-<!-- 🟢 SUCCESS MODAL (Replaces alert) -->
+<!-- SUCCESS MODAL -->
 <div id="successModal" class="modal-overlay hidden">
   <div class="modal-content">
-    <div style="width: 60px; height: 60px; background: #dcfce7; color: #166534; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px; font-size: 24px;">
-      ✓
-    </div>
+    <div style="width: 60px; height: 60px; background: #dcfce7; color: #166534; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 16px; font-size: 24px;">✓</div>
     <h3>Order Placed!</h3>
     <p>Your engagement order is now being processed. You can track its status in your history.</p>
-    
-    <button class="btn-pay" style="width: 100%;" onclick="window.location.href='history.html'">
-      Go to History
-    </button>
+    <button class="btn-pay" style="width: 100%;" onclick="window.location.href='history.html'">Go to History</button>
   </div>
 </div>
 
@@ -122,158 +177,183 @@
 <script src="../assets/js/main.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
-    const serviceSelect = document.getElementById("serviceSelect");
+    if (window.lucide) lucide.createIcons();
+    
+    const trigger = document.getElementById("selectTrigger");
+    const selectedText = document.getElementById("selectedServiceText");
+    const optionsMenu = document.getElementById("optionsMenu");
+    const optionsList = document.getElementById("optionsList");
+    const searchInput = document.getElementById("serviceSearch");
+    
     const linkInput = document.getElementById("targetLink");
     const qtyInput = document.getElementById("quantityInput");
     const qtyHint = document.getElementById("quantityHint");
     const priceBox = document.getElementById("priceBox");
-    const totalCostText = document.getElementById("totalCost");
+    const totalCostUsd = document.getElementById("totalCostUsd");
+    const totalCostNgn = document.getElementById("totalCostNgn");
     const formError = document.getElementById("formError");
-    const orderBtn = document.getElementById("orderBtn");
-    
-    const confirmModal = document.getElementById("confirmModal");
-    const modalServiceName = document.getElementById("modalServiceName");
-    const modalLink = document.getElementById("modalLink");
-    const modalPrice = document.getElementById("modalPrice");
-    const modalError = document.getElementById("modalError");
     
     let allServices = [];
-    const EXCHANGE_RATE = 1500; // Frontend calculation (matches backend)
+    let selectedService = null;
+    const EXCHANGE_RATE = 1500;
 
-    // 1. Fetch Services from Backend
+    // 1. Fetch Services
     try {
       const data = await apiFetch("/engagement/services");
-      allServices = data.services || [];
+      // Clean up names: remove provider junk like (Min: 10 | Max: 1000)
+      allServices = (data.services || []).map(s => ({
+        ...s,
+        cleanName: s.name.replace(/\[.*?\]|\(Min.*?\)|\n/g, '').trim() 
+      }));
       
-      if (allServices.length === 0) {
-        serviceSelect.innerHTML = `<option value="">No services available right now.</option>`;
-        return;
-      }
-
-      // Populate Dropdown
-      serviceSelect.innerHTML = `<option value="">-- Choose a service --</option>` + 
-        allServices.map(s => `
-          <option value="${s.service}" data-rate="${s.rate}" data-min="${s.min}" data-max="${s.max}">
-            ${s.name} (Min: ${s.min} | Max: ${s.max})
-          </option>
-        `).join('');
-
+      renderOptions(allServices);
+      selectedText.textContent = "-- Choose a service --";
     } catch (error) {
-      serviceSelect.innerHTML = `<option value="">Failed to load services.</option>`;
+      selectedText.textContent = "Failed to load services.";
       formError.textContent = error.message;
       formError.classList.remove("hidden");
     }
 
-    // 2. Live Price Calculation Function
-    const calculatePrice = () => {
-      const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-      const rate = Number(selectedOption.getAttribute("data-rate") || 0);
-      const qty = Number(qtyInput.value);
+    // 2. Toggle Dropdown
+    window.toggleDropdown = () => {
+      optionsMenu.classList.toggle("show");
+      trigger.classList.toggle("active");
+      if (optionsMenu.classList.contains("show")) searchInput.focus();
+    };
 
-      if (rate > 0 && qty > 0) {
-        const costUsd = (rate / 1000) * qty;
-        const costNgn = Math.round(costUsd * EXCHANGE_RATE * 100) / 100;
-        totalCostText.textContent = `₦${costNgn.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`;
+    // Close when clicking outside
+    document.addEventListener("click", (e) => {
+      const wrapper = document.getElementById("dropdownWrapper");
+      if (!wrapper.contains(e.target)) {
+        optionsMenu.classList.remove("show");
+        trigger.classList.remove("active");
+      }
+    });
+
+    // 3. Render Options
+    function renderOptions(services) {
+      if (services.length === 0) {
+        optionsList.innerHTML = `<div style="padding: 16px; text-align: center; color: var(--muted);">No services found.</div>`;
+        return;
+      }
+      
+      optionsList.innerHTML = services.map(s => `
+        <div class="option-item" onclick="selectService('${s.service}')">
+          <div class="option-name">${s.cleanName}</div>
+          <div class="option-meta">
+            <span>Min: ${Number(s.min).toLocaleString()}</span>
+            <span>Max: ${Number(s.max).toLocaleString()}</span>
+            <span style="color: var(--brand); font-weight: 600;">$${(s.rate / 1000).toFixed(4)} / 1k</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 4. Filter Options
+    window.filterOptions = () => {
+      const query = searchInput.value.toLowerCase();
+      const filtered = allServices.filter(s => s.cleanName.toLowerCase().includes(query));
+      renderOptions(filtered);
+    };
+
+    // 5. Select Service
+    window.selectService = (serviceId) => {
+      selectedService = allServices.find(s => String(s.service) === String(serviceId));
+      
+      selectedText.textContent = selectedService.cleanName;
+      qtyInput.min = selectedService.min;
+      qtyInput.max = selectedService.max;
+      qtyHint.textContent = `Allowed range: ${Number(selectedService.min).toLocaleString()} - ${Number(selectedService.max).toLocaleString()}`;
+      qtyInput.value = "";
+      
+      optionsMenu.classList.remove("show");
+      trigger.classList.remove("active");
+      
+      calculatePrice();
+    };
+
+    // 6. Live Price Calculation
+    const calculatePrice = () => {
+      if (!selectedService) return;
+      
+      const qty = Number(qtyInput.value);
+      if (qty > 0) {
+        const costUsd = (Number(selectedService.rate) / 1000) * qty;
+        const costNgn = costUsd * EXCHANGE_RATE;
+        
+        totalCostUsd.textContent = `$${costUsd.toFixed(2)}`;
+        totalCostNgn.textContent = `≈ ₦${costNgn.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         priceBox.classList.remove("hidden");
-        return costNgn;
+        return { costUsd, costNgn };
       } else {
         priceBox.classList.add("hidden");
-        return 0;
+        return null;
       }
     };
 
-    // 3. Handle Service Selection Change
-    serviceSelect.addEventListener("change", (e) => {
-      const selectedOption = e.target.options[e.target.selectedIndex];
-      const min = selectedOption.getAttribute("data-min");
-      const max = selectedOption.getAttribute("data-max");
-
-      if (min && max) {
-        qtyInput.min = min;
-        qtyInput.max = max;
-        qtyHint.textContent = `Allowed range: ${Number(min).toLocaleString()} - ${Number(max).toLocaleString()}`;
-        qtyInput.value = ""; // Clear previous quantity
-      } else {
-        qtyHint.textContent = "";
-      }
-      calculatePrice();
-    });
-
-    // 4. Handle Quantity Typing
     qtyInput.addEventListener("input", calculatePrice);
 
-    // 5. Handle Proceed Button
-    orderBtn.addEventListener("click", () => {
+    // 7. Handle Proceed Button
+    document.getElementById("orderBtn").addEventListener("click", () => {
       formError.classList.add("hidden");
-      const serviceId = serviceSelect.value;
       const link = linkInput.value.trim();
       const qty = Number(qtyInput.value);
 
-      if (!serviceId || !link || !qty) {
-        formError.textContent = "Please fill in all fields correctly.";
+      if (!selectedService || !link || !qty) {
+        formError.textContent = "Please select a service and fill in all fields.";
         formError.classList.remove("hidden");
         return;
       }
 
-      const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-      const min = Number(selectedOption.getAttribute("data-min"));
-      const max = Number(selectedOption.getAttribute("data-max"));
-
-      if (qty < min || qty > max) {
-        formError.textContent = `Quantity must be between ${min.toLocaleString()} and ${max.toLocaleString()}.`;
+      if (qty < Number(selectedService.min) || qty > Number(selectedService.max)) {
+        formError.textContent = `Quantity must be between ${Number(selectedService.min).toLocaleString()} and ${Number(selectedService.max).toLocaleString()}.`;
         formError.classList.remove("hidden");
         return;
       }
 
       // Populate Modal
-      modalServiceName.textContent = selectedOption.text.split(' (Min')[0];
-      modalLink.textContent = link;
-      modalPrice.textContent = totalCostText.textContent;
-      modalError.classList.add("hidden");
+      document.getElementById("modalServiceName").textContent = selectedService.cleanName;
+      document.getElementById("modalLink").textContent = link;
+      document.getElementById("modalPriceUsd").textContent = totalCostUsd.textContent;
+      document.getElementById("modalPriceNgn").textContent = totalCostNgn.textContent;
+      document.getElementById("modalError").classList.add("hidden");
       
-      confirmModal.classList.remove("hidden");
+      document.getElementById("confirmModal").classList.remove("hidden");
     });
 
-    // 6. Handle Modal Close
     document.getElementById("cancelOrderBtn").addEventListener("click", () => {
-      confirmModal.classList.add("hidden");
+      document.getElementById("confirmModal").classList.add("hidden");
     });
 
-    // 7. Execute Order
+    // 8. Execute Order
     document.getElementById("confirmOrderBtn").addEventListener("click", async (e) => {
       const btn = e.target;
       const originalText = btn.textContent;
       
       btn.disabled = true;
       btn.textContent = "Processing...";
-      modalError.classList.add("hidden");
+      document.getElementById("modalError").classList.add("hidden");
 
       try {
-        const payload = {
-          serviceId: serviceSelect.value,
-          link: linkInput.value.trim(),
-          quantity: Number(qtyInput.value)
-        };
-
         await apiFetch("/engagement/order", {
           method: "POST",
-          body: JSON.stringify(payload),
+          body: JSON.stringify({
+            serviceId: selectedService.service,
+            link: linkInput.value.trim(),
+            quantity: Number(qtyInput.value)
+          }),
         });
 
-        confirmModal.classList.add("hidden");
-        
-        // Show Success Modal Instead of Alert
+        document.getElementById("confirmModal").classList.add("hidden");
         document.getElementById("successModal").classList.remove("hidden");
         
       } catch (err) {
-        modalError.textContent = err.message || "Failed to place order.";
-        modalError.classList.remove("hidden");
+        document.getElementById("modalError").textContent = err.message || "Failed to place order.";
+        document.getElementById("modalError").classList.remove("hidden");
         btn.disabled = false;
         btn.textContent = originalText;
       }
     });
-
-    if (window.lucide) lucide.createIcons();
   });
 </script>
 </body>
