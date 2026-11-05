@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — NumbaHub</title>
+  
+  <!-- 🟢 PWA META TAGS -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#3179df">
+  <!-- 🟢 END PWA TAGS -->
+
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -20,7 +28,6 @@
           <div class="balance-label">Available balance</div>
           <div class="balance" id="walletBalance">$0.00 <span style="font-size:16px;color:#dbeafe;"><i data-lucide="eye"></i></span></div>
         </div>
-        <!-- 👈 REDIRECTS TO THE FULL PAGE INSTEAD OF MODAL -->
         <a href="pages/fund-wallet.html" class="primary-button" style="text-decoration: none;">
           <i data-lucide="plus"></i> Fund wallet
         </a>
@@ -81,5 +88,22 @@
     lucide.createIcons();
   });
 </script>
+<!-- 🟢 PREMIUM PWA INSTALL BANNER -->
+<div id="pwaInstallBanner" class="hidden" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(150%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; width: 90%; max-width: 500px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); display: flex; align-items: center; gap: 16px; color: #fff;">
+  
+  <div style="width: 50px; height: 50px; background: var(--brand); border-radius: 12px; display: grid; place-items: center; flex-shrink: 0;">
+    <i data-lucide="download" style="width: 24px; height: 24px; color: #fff;"></i>
+  </div>
+  
+  <div style="flex: 1;">
+    <h3 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #fff;">Install NumbaHub App</h3>
+    <p style="margin: 0; font-size: 13px; color: #94a3b8;">Get faster access directly from your home screen.</p>
+  </div>
+
+  <div style="display: flex; gap: 8px; flex-shrink: 0;">
+    <button id="pwaLaterBtn" style="background: transparent; color: #cbd5e1; border: none; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Later</button>
+    <button id="pwaInstallBtn" style="background: var(--brand); color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px -3px rgba(67, 137, 238, 0.5);">Install</button>
+  </div>
+</div>
 </body>
 </html>

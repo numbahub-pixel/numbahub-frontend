@@ -1,15 +1,15 @@
-/* assets/js/api.js
- * Central API client for NumbaHub.
- * Exposes: apiFetch, getToken, setToken, clearToken, getUser, setUser, logout, ApiError
- */
+/* assets/js/api.js */
 (function (global) {
   "use strict";
 
-  const API_URL = "https://numbahub-backend.onrender.com/api"; 
+  // 🟢 AUTO-DETECT: Use local backend if on localhost, otherwise use Render
+  const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5000/api" 
+    : "https://numbahub-backend.onrender.com/api";
+
   const TOKEN_KEY = "token";
   const USER_KEY  = "user";
 
-  /* ---------------- token / user storage ---------------- */
   const getToken   = () => localStorage.getItem(TOKEN_KEY);
   const setToken   = (t) => localStorage.setItem(TOKEN_KEY, t);
   const clearToken = () => localStorage.removeItem(TOKEN_KEY);
@@ -23,16 +23,11 @@
     else localStorage.removeItem(USER_KEY);
   };
 
-  /* ---------------- path helpers (works from / and /pages/) ---------------- */
   const basePath = () =>
     window.location.pathname.includes("/pages/") ? "../" : "./";
 
   const loginUrl = () => `${basePath()}pages/login.html`;
 
-  /**
-   * Log the user out and send them to the login page.
-   * @param {"expired"|undefined} reason
-   */
   const logout = (reason) => {
     clearToken();
     setUser(null);
@@ -40,7 +35,6 @@
     window.location.replace(url);
   };
 
-  /* ---------------- error type ---------------- */
   class ApiError extends Error {
     constructor(message, status = 0, code = "ERROR") {
       super(message);
@@ -50,13 +44,6 @@
     }
   }
 
-  /* ---------------- main fetch wrapper ---------------- */
-  /**
-   * @param {string} endpoint  e.g. "/auth/login"
-   * @param {object} [options]
-   * @param {boolean} [options.auth=true]  attach bearer token + auto-logout on 401.
-   *                                       Set to false for /auth/login and /auth/register.
-   */
   async function apiFetch(endpoint, options = {}) {
     const { auth = true, ...rest } = options;
     const token = getToken();
@@ -72,44 +59,32 @@
     try {
       response = await fetch(`${API_URL}${endpoint}`, { ...rest, headers });
     } catch (networkErr) {
-      throw new ApiError(
-        "Network error — please check your connection and try again.",
-        0,
-        "NETWORK_ERROR"
-      );
+      throw new ApiError("Network error — is your backend running?", 0, "NETWORK_ERROR");
     }
 
-    /* Parse body safely (204 / empty / non-JSON safe) */
     let data = null;
     const raw = await response.text();
     if (raw) {
       try { data = JSON.parse(raw); }
-      catch { data = { message: raw }; }
+      catch { data = { message: raw }; } // If it returns HTML (like a 404 page), wrap it
     }
 
-    /* Protected call + 401 → session expired, send to login */
     if (response.status === 401 && auth) {
       logout("expired");
-      throw new ApiError(
-        "Your session has expired. Please log in again.",
-        401,
-        "SESSION_EXPIRED"
-      );
+      throw new ApiError("Your session has expired. Please log in again.", 401, "SESSION_EXPIRED");
     }
 
-    /* Any other non-2xx → throw a clean ApiError with backend message */
     if (!response.ok) {
-      throw new ApiError(
-        data?.message || `Request failed (${response.status}).`,
-        response.status,
-        data?.code || "REQUEST_FAILED"
-      );
+      // If it's a 404 HTML page, give a friendlier message
+      if (response.status === 404 && data?.message?.includes("Cannot")) {
+         throw new ApiError("Backend route not found. Restart your server.", 404, "ROUTE_NOT_FOUND");
+      }
+      throw new ApiError(data?.message || `Request failed (${response.status}).`, response.status, data?.code || "REQUEST_FAILED");
     }
 
     return data;
   }
 
-  /* ---------------- export ---------------- */
   global.API_URL     = API_URL;
   global.ApiError    = ApiError;
   global.getToken    = getToken;

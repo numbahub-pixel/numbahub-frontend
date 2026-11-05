@@ -4,96 +4,156 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | NumbaHub</title>
+  
+  <!-- PWA META TAGS -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#3179df">
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    /* 🟢 Force absolute full height and remove margins */
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden; 
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+    
+    /* Soft glowing background orbs for the light side */
+    .light-orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.5; }
+    .orb-1 { width: 400px; height: 400px; background: #bfdbfe; top: -100px; right: -100px; }
+    .orb-2 { width: 300px; height: 300px; background: #ddd6fe; bottom: -50px; left: -50px; }
+
+    /* Premium Glassmorphism Card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255,255,255,0.5);
+    }
+
+    /* Premium Inputs */
+    .premium-input {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+      transition: all 0.2s ease;
+    }
+    .premium-input:focus {
+      background: #ffffff;
+      border-color: #3179df;
+      box-shadow: 0 0 0 4px rgba(49, 121, 223, 0.15);
+      outline: none;
+    }
+  </style>
 </head>
-<body class="min-h-screen bg-slate-50">
-  <main class="grid min-h-screen lg:grid-cols-2">
-    <section class="relative hidden overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-blue-700 p-12 text-white lg:flex lg:flex-col lg:justify-between">
-      <!-- 👈 FIXED RELATIVE PATH -->
-      <a href="../index.html" class="text-2xl font-bold">Numba<span class="text-blue-400">Hub</span></a>
+<body class="h-full w-full flex">
+
+  <!-- 🟢 h-full ensures the grid takes exactly 100% of the viewport -->
+  <main class="grid w-full h-full lg:grid-cols-2">
+    
+    <!-- Left Panel -->
+    <section class="relative hidden overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-blue-700 p-12 text-white lg:flex lg:flex-col lg:justify-between h-full">
+      <a href="../index.html" class="text-2xl font-bold flex items-center gap-3 relative z-10">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/20 backdrop-blur-md flex items-center justify-center border border-white/10">
+          <i data-lucide="layers" class="w-5 h-5 text-blue-400"></i>
+        </div>
+        Numba<span class="text-blue-400">Hub</span>
+      </a>
       <div class="relative z-10 max-w-lg">
         <p class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-blue-300">Your digital toolkit</p>
-        <h1 class="text-5xl font-bold leading-tight">Everything you need.<span class="block text-blue-400">All in one hub.</span></h1>
-        <p class="mt-6 max-w-md leading-7 text-slate-300">Manage your digital services, stay organised, and get things done from one simple dashboard.</p>
+        <h1 class="text-5xl font-bold leading-[1.1] tracking-tight">Everything you need.<span class="block text-blue-400">All in one hub.</span></h1>
+        <p class="mt-6 max-w-md leading-relaxed text-slate-300">Manage your digital services, stay organised, and get things done from one simple dashboard.</p>
       </div>
-      <p class="text-sm text-slate-400">© 2026 NumbaHub. All rights reserved.</p>
+      <p class="text-sm text-slate-500 relative z-10">© 2026 NumbaHub. All rights reserved.</p>
     </section>
 
-    <section class="flex min-h-screen items-center justify-center bg-white px-6 py-12 sm:px-12">
-      <div class="w-full max-w-md">
-        <div class="mb-8">
-          <p class="text-sm font-semibold uppercase tracking-widest text-blue-600">Welcome back</p>
-          <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-900">Log in to your account</h2>
-          <p class="mt-3 text-sm leading-6 text-slate-500">Enter your details to access your dashboard.</p>
+    <!-- Right Panel -->
+    <section class="relative flex items-center justify-center p-6 sm:p-12 h-full bg-[#f8fafc]">
+      
+      <!-- Glowing background effects for the glass to blur -->
+      <div class="light-orb orb-1"></div>
+      <div class="light-orb orb-2"></div>
+
+      <div class="glass-card relative z-10 w-full max-w-md rounded-3xl p-8 sm:p-10">
+        
+        <div class="mb-8 text-center">
+          <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-100 shadow-sm">
+            <i data-lucide="lock" class="w-6 h-6"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900">Welcome back</h2>
+          <p class="text-sm text-slate-500 mt-2">Enter your details to access your dashboard.</p>
         </div>
 
         <form id="loginForm" class="space-y-5" novalidate>
-          <div id="formError" role="alert" aria-live="assertive"
-               class="hidden rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"></div>
+          <div id="formError" class="hidden bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm text-center font-medium"></div>
 
           <div>
-            <label for="email" class="mb-2 block text-sm font-medium text-slate-700">Email address</label>
-            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required
-                   class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-          </div>
-          <div>
-            <label for="password" class="mb-2 block text-sm font-medium text-slate-700">Password</label>
-            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required
-                   class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+            <label for="email" class="block text-sm font-bold text-slate-700 mb-2">Email address</label>
+            <div class="relative">
+              <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+              <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required class="premium-input w-full pl-12 pr-4 py-3.5 rounded-xl text-sm font-semibold">
+            </div>
           </div>
 
-          <button type="submit" id="submitBtn"
-                  class="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 font-semibold text-white shadow-lg transition hover:bg-blue-700 disabled:opacity-50">
-            Log in <span aria-hidden="true">→</span>
+          <div>
+            <label for="password" class="block text-sm font-bold text-slate-700 mb-2">Password</label>
+            <div class="relative">
+              <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+              <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required class="premium-input w-full pl-12 pr-4 py-3.5 rounded-xl text-sm font-semibold">
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="w-full py-4 rounded-xl text-white font-bold flex items-center justify-center gap-2 mt-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-lg shadow-blue-500/30 transition-all">
+            Log in <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
         </form>
 
         <p class="mt-8 text-center text-sm text-slate-500">
-          Don't have an account?
+          Don't have an account? 
           <a href="signup.html" class="font-semibold text-blue-600 hover:text-blue-700">Create an account</a>
         </p>
       </div>
     </section>
   </main>
 
-  <!-- 👈 FIXED RELATIVE PATH -->
   <script src="../assets/js/api.js"></script>
-  
   <script>
-    (function () {
-      const form     = document.getElementById("loginForm");
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide) lucide.createIcons();
+      
+      const form = document.getElementById("loginForm");
       const errorBox = document.getElementById("formError");
-      const btn      = document.getElementById("submitBtn");
+      const btn = document.getElementById("submitBtn");
       const btnLabel = btn.innerHTML;
 
-      const showError = (msg) => {
-        errorBox.textContent = msg;
-        errorBox.classList.remove("hidden");
-      };
-      const hideError = () => {
-        errorBox.classList.add("hidden");
-        errorBox.textContent = "";
-      };
+      const showError = (msg) => { errorBox.textContent = msg; errorBox.classList.remove("hidden"); };
+      const hideError = () => { errorBox.classList.add("hidden"); };
 
       const params = new URLSearchParams(window.location.search);
-      if (params.get("reason") === "expired") {
-        showError("Your session has expired. Please log in again.");
-      }
+      if (params.get("reason") === "expired") showError("Your session has expired. Please log in again.");
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         hideError();
 
-        const email    = document.getElementById("email").value.trim();
+        const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
 
-        if (!email || !password) {
-          showError("Please enter both your email and password.");
-          return;
-        }
+        if (!email || !password) return showError("Please enter both email and password.");
 
         btn.disabled = true;
-        btn.innerHTML = "Logging in…";
+        btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> Logging in...`;
+        if (window.lucide) lucide.createIcons();
 
         try {
           const data = await apiFetch("/auth/login", {
@@ -104,17 +164,16 @@
 
           setToken(data.token);
           setUser(data.user);
-          
-          // 👈 FIXED RELATIVE REDIRECT
           window.location.href = "../index.html";
         } catch (err) {
           showError(err.message || "Unable to log in. Please try again.");
         } finally {
           btn.disabled = false;
           btn.innerHTML = btnLabel;
+          if (window.lucide) lucide.createIcons();
         }
       });
-    })();
+    });
   </script>
 </body>
 </html>

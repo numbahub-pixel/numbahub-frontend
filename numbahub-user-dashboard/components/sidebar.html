@@ -3,6 +3,7 @@
     <img id="sidebarLogo" src="" alt="NumbaHub Logo" class="brand-logo">
     <div class="brand-name">NumbaHub</div>
   </div>
+  
   <nav class="nav">
     <a class="nav-link" data-route="index.html" href="#"><i class="nav-icon" data-lucide="house"></i><span>Home</span></a>
     <a class="nav-link" data-route="pages/receive-sms.html" href="#"><i class="nav-icon" data-lucide="message-square-text"></i><span>Receive SMS</span></a>
@@ -10,14 +11,16 @@
     <a class="nav-link" data-route="pages/esim.html" href="#"><i class="nav-icon" data-lucide="card-sim"></i><span>eSIM</span></a>
     <a class="nav-link" data-route="pages/engagement.html" href="#"><i class="nav-icon" data-lucide="rocket"></i><span>Engagement Hub</span></a>
     <a class="nav-link" data-route="pages/giftcards.html" href="#"><i class="nav-icon" data-lucide="gift"></i><span>Giftcards</span></a>
-    
-    <!-- 👈 ADDED VERIFICATIONS HERE -->
     <a class="nav-link" data-route="pages/verifications.html" href="#"><i class="nav-icon" data-lucide="shield-check"></i><span>Verifications</span></a>
-    
+    <a class="nav-link" data-route="pages/support.html" href="#"><i class="nav-icon" data-lucide="headset"></i><span>Support</span></a>
     <a class="nav-link" data-route="pages/Referral.html" href="#"><i class="nav-icon" data-lucide="users"></i><span>Referral</span></a>
     <a class="nav-link" data-route="pages/history.html" href="#"><i class="nav-icon" data-lucide="history"></i><span>History</span></a>
     <a class="nav-link" data-route="pages/settings.html" href="#"><i class="nav-icon" data-lucide="settings"></i><span>Settings</span></a>
   </nav>
+  
+  <div class="sidebar-footer">
+    <button class="sidebar-logout" onclick="logout()"><i data-lucide="log-out"></i> Sign out</button>
+  </div>
 </aside>
 
 <header class="topbar">
@@ -32,9 +35,9 @@
   </div>
   
   <div class="top-actions">
-    <button class="icon-button top-icon-btn" aria-label="Support">
+    <a href="pages/support.html" class="icon-button top-icon-btn" aria-label="Support" style="text-decoration:none;">
       <i data-lucide="headphones"></i>
-    </button>
+    </a>
     <button class="icon-button top-icon-btn" aria-label="Notifications">
       <i data-lucide="bell"></i>
     </button>
