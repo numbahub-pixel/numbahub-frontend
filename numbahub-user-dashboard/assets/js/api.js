@@ -9,15 +9,31 @@
 
   const TOKEN_KEY = "token";
   const USER_KEY  = "user";
+  const ACTIVITY_KEY = "lastActivity";
+  
+  // 🟢 INACTIVITY TIMEOUT: 15 Minutes
+  const INACTIVITY_TIMEOUT = 15 * 60 * 1000; 
+  let inactivityTimer;
 
+  // --- Token & User Management ---
   const getToken   = () => localStorage.getItem(TOKEN_KEY);
-  const setToken   = (t) => localStorage.setItem(TOKEN_KEY, t);
-  const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+  
+  const setToken   = (t) => {
+    localStorage.setItem(TOKEN_KEY, t);
+    localStorage.setItem(ACTIVITY_KEY, Date.now().toString());
+    startInactivityTimer();
+  };
+  
+  const clearToken = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(ACTIVITY_KEY);
+  };
 
   const getUser = () => {
     try { return JSON.parse(localStorage.getItem(USER_KEY) || "null"); }
     catch { return null; }
   };
+  
   const setUser = (u) => {
     if (u) localStorage.setItem(USER_KEY, JSON.stringify(u));
     else localStorage.removeItem(USER_KEY);
@@ -31,10 +47,62 @@
   const logout = (reason) => {
     clearToken();
     setUser(null);
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    
     const url = loginUrl() + (reason ? `?reason=${encodeURIComponent(reason)}` : "");
     window.location.replace(url);
   };
 
+  // --- 🟢 INACTIVITY TRACKER LOGIC ---
+  const updateActivity = () => {
+    if (getToken()) {
+      localStorage.setItem(ACTIVITY_KEY, Date.now().toString());
+    }
+  };
+
+  const startInactivityTimer = () => {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    
+    if (getToken()) {
+      inactivityTimer = setTimeout(() => {
+        alert("Your session has expired due to inactivity. Please log in again.");
+        logout("expired");
+      }, INACTIVITY_TIMEOUT);
+    }
+  };
+
+  // Check if the user closed the tab and came back later
+  const checkInactivityOnLoad = () => {
+    const token = getToken();
+    const lastActivity = localStorage.getItem(ACTIVITY_KEY);
+    
+    if (token && lastActivity) {
+      const timePassed = Date.now() - parseInt(lastActivity, 10);
+      if (timePassed > INACTIVITY_TIMEOUT) {
+        alert("Your session has expired due to inactivity. Please log in again.");
+        logout("expired");
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // Listen for user interactions to keep the session alive
+  ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(event => {
+    document.addEventListener(event, () => {
+      updateActivity();
+      startInactivityTimer();
+    }, { passive: true });
+  });
+
+  // Initialize tracker on page load
+  if (getToken()) {
+    if (checkInactivityOnLoad()) {
+      startInactivityTimer();
+    }
+  }
+
+  // --- API FETCH WRAPPER ---
   class ApiError extends Error {
     constructor(message, status = 0, code = "ERROR") {
       super(message);
@@ -45,6 +113,10 @@
   }
 
   async function apiFetch(endpoint, options = {}) {
+    // Any API call also counts as activity
+    updateActivity();
+    startInactivityTimer();
+
     const { auth = true, ...rest } = options;
     const token = getToken();
 
@@ -75,7 +147,6 @@
     }
 
     if (!response.ok) {
-      // If it's a 404 HTML page, give a friendlier message
       if (response.status === 404 && data?.message?.includes("Cannot")) {
          throw new ApiError("Backend route not found. Restart your server.", 404, "ROUTE_NOT_FOUND");
       }
@@ -85,6 +156,7 @@
     return data;
   }
 
+  // --- EXPORT TO GLOBAL SCOPE ---
   global.API_URL     = API_URL;
   global.ApiError    = ApiError;
   global.getToken    = getToken;
@@ -94,4 +166,5 @@
   global.setUser     = setUser;
   global.logout      = logout;
   global.apiFetch    = apiFetch;
+
 })(window);
