@@ -11,8 +11,8 @@
   const USER_KEY  = "user";
   const ACTIVITY_KEY = "lastActivity";
   
-  // 🟢 INACTIVITY TIMEOUT: 15 Minutes
-  const INACTIVITY_TIMEOUT = 15 * 60 * 1000; 
+  // 🟢 INACTIVITY TIMEOUT: 10 Minutes
+  const INACTIVITY_TIMEOUT = 10 * 60 * 1000; 
   let inactivityTimer;
 
   // --- Token & User Management ---
