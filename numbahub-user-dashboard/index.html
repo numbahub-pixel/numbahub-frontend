@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — NumbaHub</title>
   
-  <!-- 🟢 PWA META TAGS -->
   <link rel="manifest" href="./manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#3179df">
-  <!-- 🟢 END PWA TAGS -->
+  <meta name="theme-color" content="#4389ee">
 
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -23,56 +21,74 @@
   <div class="main">
     <main class="container">
       
+      <!-- Greeting Section (Optional but adds premium feel) -->
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-size: 24px; font-weight: 800; margin: 0 0 4px; color: var(--text); letter-spacing: -0.5px;">Overview</h2>
+        <p class="muted" style="margin: 0;">Here is what's happening with your account today.</p>
+      </div>
+
+      <!-- Premium Glass Balance Card -->
       <section class="balance-card">
         <div>
-          <div class="balance-label">Available balance</div>
-          <div class="balance" id="walletBalance">$0.00 <span style="font-size:16px;color:#dbeafe;"><i data-lucide="eye"></i></span></div>
+          <div class="balance-label">Total Available Balance</div>
+          <div class="balance" id="walletBalance">₦0.00 <span style="font-size:18px; opacity:0.8; margin-left:4px;"><i data-lucide="eye"></i></span></div>
         </div>
         <a href="pages/fund-wallet.html" class="primary-button" style="text-decoration: none;">
-          <i data-lucide="plus"></i> Fund wallet
+          <i data-lucide="plus" style="width: 18px;"></i> Add Funds
         </a>
       </section>
 
       <div class="quickaccess">
-        <p>Quick access</p>
+        Quick Actions
       </div>
 
+      <!-- Glass Service Grid -->
       <section class="service-grid">
-        <a class="service-item" href="pages/Referral.html">
-          <span class="service-icon icon-violet"><i data-lucide="user-group"></i></span>
-          <span style="font-weight:500;">Referral</span>
-        </a>
         <a class="service-item" href="pages/airtime.html">
-          <span class="service-icon icon-blue"><i data-lucide="phone"></i></span>
-          <span style="font-weight:500;">Airtime</span>
+          <span class="service-icon icon-blue"><i data-lucide="smartphone" style="width:24px; height:24px;"></i></span>
+          <span style="font-weight:700; color:var(--text);">Airtime</span>
         </a>
         <a class="service-item" href="pages/esim.html">
-          <span class="service-icon icon-orange"><i data-lucide="card-sim"></i></span>
-          <span style="font-weight:500;">eSIM</span>
+          <span class="service-icon icon-orange"><i data-lucide="globe" style="width:24px; height:24px;"></i></span>
+          <span style="font-weight:700; color:var(--text);">eSIMs</span>
         </a>
         <a class="service-item" href="pages/giftcards.html">
-          <span class="service-icon icon-green"><i data-lucide="gift"></i></span>
-          <span style="font-weight:500;">Giftcards</span>
+          <span class="service-icon icon-green"><i data-lucide="gift" style="width:24px; height:24px;"></i></span>
+          <span style="font-weight:700; color:var(--text);">Giftcards</span>
+        </a>
+        <a class="service-item" href="pages/engagement.html">
+          <span class="service-icon icon-violet"><i data-lucide="rocket" style="width:24px; height:24px;"></i></span>
+          <span style="font-weight:700; color:var(--text);">Boost</span>
         </a>
       </section>
 
+      <!-- Glass Cards for Rent & eSIM -->
       <section class="two-column">
         <div class="card">
           <div class="card-header">
-            <h2 class="card-title">Rent numbers <span class="count">0</span></h2>
+            <h2 class="card-title">Active Rentals <span class="count">0</span></h2>
             <a class="view-link" href="pages/rent.html">View all</a>
           </div>
           <div class="empty">
-            <div><div class="empty-icon"><i data-lucide="search"></i></div><strong>No rental number</strong><p>Your active rental numbers will appear here.</p></div>
+            <div>
+              <div class="empty-icon"><i data-lucide="phone-call" style="width:24px; color:var(--brand);"></i></div>
+              <strong>No active numbers</strong>
+              <p>Your rented numbers will appear here.</p>
+            </div>
           </div>
         </div>
+        
         <div class="card">
           <div class="card-header">
-            <h2 class="card-title">eSIMs <span class="count">0</span></h2>
+            <h2 class="card-title">My eSIMs <span class="count">0</span></h2>
             <a class="view-link" href="pages/esim.html">View all</a>
           </div>
           <div class="empty">
-            <div><div class="empty-icon"><i data-lucide="card-sim"></i></div><strong>No eSIM</strong><p>Your active eSIM plans will appear here.</p></div>
+            <div>
+              <div class="empty-icon"><i data-lucide="qr-code" style="width:24px; color:var(--brand);"></i></div>
+              <strong>No active eSIMs</strong>
+              <p>Purchase an eSIM plan to get started.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -88,6 +104,7 @@
     lucide.createIcons();
   });
 </script>
+
 <!-- 🟢 PREMIUM PWA INSTALL BANNER -->
 <div id="pwaInstallBanner" class="hidden" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(150%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; width: 90%; max-width: 500px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); display: flex; align-items: center; gap: 16px; color: #fff;">
   

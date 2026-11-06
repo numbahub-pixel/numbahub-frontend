@@ -14,9 +14,12 @@
   
   <div class="main">
     <main class="container">
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-        <button onclick="window.location.href='giftcards.html'" class="icon-button"><i data-lucide="arrow-left"></i></button>
-        <h2 style="margin: 0; font-size: 20px;">Select Brand</h2>
+      <div class="page-heading" style="display: flex; align-items: center; gap: 12px;">
+        <button onclick="window.location.href='giftcards.html'" class="icon-button" style="width: 40px; height: 40px;"><i data-lucide="arrow-left" style="width: 18px;"></i></button>
+        <div>
+          <h2 style="margin: 0; font-size: 24px; font-weight: 800;">Select Brand</h2>
+          <p style="margin: 4px 0 0;">Choose from popular global brands.</p>
+        </div>
       </div>
 
       <div class="grid-3" id="brandGrid">
@@ -36,7 +39,7 @@
     const country = urlParams.get('country');
 
     if (!country) {
-      grid.innerHTML = `<p style="color:red;">No country selected.</p>`;
+      grid.innerHTML = `<p style="color:red; text-align:center; grid-column:1/-1;">No country selected.</p>`;
       return;
     }
 
@@ -50,15 +53,15 @@
       }
 
       grid.innerHTML = brands.map(b => `
-        <div class="product-card" style="cursor: pointer; text-align: center;" onclick="window.location.href='giftcard-products.html?operator=${b.id}'">
-          <div style="height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-            <img src="${b.image}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
+        <div class="brand-card" onclick="window.location.href='giftcard-products.html?operator=${b.id}'">
+          <div class="brand-img-wrapper">
+            <img src="${b.image}" alt="${b.name}">
           </div>
-          <h3 style="font-size: 14px; margin: 0;">${b.name}</h3>
+          <h3 style="font-size: 15px; margin: 0; font-weight: 700; color: var(--text);">${b.name}</h3>
         </div>
       `).join('');
     } catch (error) {
-      grid.innerHTML = `<p style="color:red; grid-column: 1/-1;">Failed to load brands: ${error.message}</p>`;
+      grid.innerHTML = `<p style="color:red; grid-column: 1/-1; text-align:center;">Failed to load brands: ${error.message}</p>`;
     }
   });
 </script>

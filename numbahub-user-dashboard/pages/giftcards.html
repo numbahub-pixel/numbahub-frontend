@@ -13,21 +13,23 @@
   <div class="overlay"></div>
   
   <div class="main">
-    <main class="container" style="max-width: 600px;">
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-        <button onclick="window.location.href='../index.html'" class="icon-button"><i data-lucide="arrow-left"></i></button>
-        <h2 style="margin: 0; font-size: 20px;">Buy Giftcard</h2>
+    <main class="container" style="max-width: 700px;">
+      <div class="page-heading" style="display: flex; align-items: center; gap: 12px;">
+        <button onclick="window.location.href='../index.html'" class="icon-button" style="width: 40px; height: 40px;"><i data-lucide="arrow-left" style="width: 18px;"></i></button>
+        <div>
+          <h2 style="margin: 0; font-size: 24px; font-weight: 800;">Buy Giftcard</h2>
+          <p style="margin: 4px 0 0;">Select a country to browse available brands.</p>
+        </div>
       </div>
 
-      <div class="premium-card" style="padding: 32px;">
+      <div class="premium-card" style="padding: 24px;">
         <div style="position: relative; margin-bottom: 24px;">
-          <i data-lucide="search" style="position: absolute; left: 16px; top: 14px; color: #94a3b8; width: 18px;"></i>
-          <input type="text" id="countrySearch" class="premium-input" placeholder="Search country" style="padding-left: 44px;" onkeyup="filterCountries()">
+          <i data-lucide="search" style="position: absolute; left: 16px; top: 16px; color: #94a3b8; width: 20px;"></i>
+          <input type="text" id="countrySearch" class="premium-input" placeholder="Search for a country..." style="padding-left: 48px; height: 56px; font-size: 16px;" onkeyup="filterCountries()">
         </div>
 
-        <h3 style="font-size: 14px; color: var(--muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;">Other Countries</h3>
-        <div id="countryList" style="display: flex; flex-direction: column; gap: 10px;">
-          <p class="muted">Loading countries...</p>
+        <div id="countryList" class="country-list">
+          <p class="muted" style="text-align: center;">Loading countries...</p>
         </div>
       </div>
     </main>
@@ -48,26 +50,26 @@
       allCountries = data.countries || [];
       renderCountries(allCountries);
     } catch (error) {
-      list.innerHTML = `<p style="color:red;">Failed to load countries: ${error.message}</p>`;
+      list.innerHTML = `<p style="color:#ef4444; text-align:center;">Failed to load countries: ${error.message}</p>`;
     }
   });
 
   function renderCountries(countries) {
     const list = document.getElementById("countryList");
     if (countries.length === 0) {
-      list.innerHTML = `<p class="muted">No countries found.</p>`;
+      list.innerHTML = `<p class="muted" style="text-align:center;">No countries found.</p>`;
       return;
     }
 
     list.innerHTML = countries.map(c => {
       const flagUrl = `https://flagcdn.com/w80/${c.code.substring(0,2).toLowerCase()}.png`;
       return `
-        <div onclick="goToBrands('${c.code}')" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--brand)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div class="country-item" onclick="goToBrands('${c.code}')">
           <div style="display: flex; align-items: center; gap: 16px;">
-            <img src="${flagUrl}" style="width: 28px; height: 20px; border-radius: 4px; object-fit: cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <span style="font-weight: 600; font-size: 15px; color: var(--text);">${c.name}</span>
+            <img src="${flagUrl}" class="country-flag">
+            <span style="font-weight: 700; font-size: 16px; color: var(--text);">${c.name}</span>
           </div>
-          <i data-lucide="chevron-right" style="color: #94a3b8; width: 18px;"></i>
+          <i data-lucide="chevron-right" style="color: var(--brand); width: 20px;"></i>
         </div>
       `;
     }).join('');
