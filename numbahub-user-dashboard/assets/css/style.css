@@ -312,17 +312,57 @@ a { text-decoration: none; color: inherit; }
    RESPONSIVE DESIGN
    ========================================= */
 @media (max-width: 1024px) {
-  .sidebar { transform: translateX(-100%); left: -300px; }
-  .sidebar.open { transform: translateX(0); left: 0; }
+  /* 🟢 FIX: Sidebar Z-Index is now higher than the overlay */
+  .sidebar { 
+    transform: translateX(-100%); 
+    left: -300px; 
+    z-index: 99999 !important; /* Higher than overlay */
+    background: #ffffff !important; /* Force solid white so it doesn't look grey */
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar.open { 
+    transform: translateX(0); 
+    left: 0; 
+  }
+  
   .main { margin-left: 0; }
   .topbar { left: 0; padding: 0 20px; }
-  .mobile-menu { display: grid; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   
-  /* Mobile Overlay */
-  .overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(2px); z-index: 9998; }
-  .overlay.show { display: block !important; }
-  .mobile-menu { display: flex !important; }
+  /* 🟢 FIX: Overlay is behind the sidebar */
+  .overlay { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(15, 23, 42, 0.5); 
+    backdrop-filter: blur(2px); 
+    z-index: 99998 !important; /* Lower than sidebar */
+  }
+  
+  .overlay.show { 
+    display: block !important; 
+  }
+  
+  /* 🟢 FIX: Premium Hamburger Button Styling */
+  .mobile-menu { 
+    display: flex !important; 
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 8px;
+  }
+
+  .mobile-menu:hover {
+    background: #e2e8f0;
+  }
 }
 
 @media (max-width: 768px) {

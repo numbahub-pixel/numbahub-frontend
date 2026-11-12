@@ -36,20 +36,16 @@
 
       <div class="premium-card" style="padding: 32px;">
         
-        <!-- Country Selection -->
+        <!-- Network Selection -->
         <div class="premium-form-group">
-          <label>Destination Country</label>
-          <select class="premium-select" id="countrySelect" onchange="loadOperators()">
-            <option value="">Loading countries...</option>
+          <label for="networkSelect">Mobile Network</label>
+          <select class="premium-select" id="networkSelect">
+            <option value="">Select a network</option>
+            <option value="MTN">MTN</option>
+            <option value="AIRTEL">Airtel</option>
+            <option value="GLO">Glo</option>
+            <option value="9MOBILE">9mobile</option>
           </select>
-        </div>
-
-        <!-- Operator Selection (Dynamic) -->
-        <div class="premium-form-group" style="margin-top: 24px;">
-          <label>Select Operator</label>
-          <div class="operator-tabs" id="operatorTabs">
-            <p class="muted">Select a country to see operators.</p>
-          </div>
         </div>
 
         <!-- Phone & Amount -->
@@ -62,17 +58,18 @@
         </div>
 
         <div class="premium-form-group">
-          <label>Amount (USD)</label>
+          <label for="amountInput">Airtime Amount (NGN)</label>
           <div class="input-wrapper">
-            <i data-lucide="dollar-sign" class="input-icon"></i>
-            <input class="premium-input" id="amountInput" type="number" placeholder="Enter amount in USD" oninput="updateAmount()">
+            <i data-lucide="banknote" class="input-icon"></i>
+            <input class="premium-input" id="amountInput" type="number" min="50" max="50000" step="1" placeholder="Enter amount from ₦50 to ₦50,000" oninput="updateAmount()">
           </div>
           <div class="amount-pills">
-            <button class="amount-pill" onclick="setAmount(5)">$5</button>
-            <button class="amount-pill" onclick="setAmount(10)">$10</button>
-            <button class="amount-pill" onclick="setAmount(25)">$25</button>
-            <button class="amount-pill" onclick="setAmount(50)">$50</button>
+            <button class="amount-pill" type="button" onclick="setAmount(100)">₦100</button>
+            <button class="amount-pill" type="button" onclick="setAmount(500)">₦500</button>
+            <button class="amount-pill" type="button" onclick="setAmount(1000)">₦1,000</button>
+            <button class="amount-pill" type="button" onclick="setAmount(2000)">₦2,000</button>
           </div>
+          <p id="markupNote" class="muted" style="font-size: 12px; margin-top: 8px;"></p>
         </div>
 
         <!-- Live Conversion -->
@@ -119,83 +116,41 @@
 <script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  let selectedOperator = null;
-  let allOperators = [];
-  const EXCHANGE_RATE = 1500; // Frontend calculation
+  let airtimeMarkup = null;
 
   document.addEventListener("DOMContentLoaded", async () => {
     if (window.lucide) lucide.createIcons();
-    const countrySelect = document.getElementById("countrySelect");
-
+    const buyButton = document.getElementById("buyBtn");
+    buyButton.disabled = true;
     try {
-      // Fetch countries from Reloadly API (via backend)
-      const data = await apiFetch("/airtime/countries");
-      if (data.countries && data.countries.length > 0) {
-        countrySelect.innerHTML = `<option value="">Select a country</option>` + 
-          data.countries.map(c => `<option value="${c.isoCode}">${c.name}</option>`).join('');
-      } else {
-        countrySelect.innerHTML = `<option value="">No countries available</option>`;
-      }
+      const pricing = await apiFetch("/airtime/pricing", { auth: false });
+      airtimeMarkup = pricing.markupPercent;
+      document.getElementById("markupNote").textContent =
+        `A ${airtimeMarkup}% service markup is included in the total charge.`;
+      buyButton.disabled = false;
     } catch (error) {
-      countrySelect.innerHTML = `<option value="">Failed to load countries</option>`;
+      const errorEl = document.getElementById("formError");
+      errorEl.textContent = `Could not load current airtime pricing: ${error.message}`;
+      errorEl.classList.remove("hidden");
     }
   });
-
-  window.loadOperators = async () => {
-    const countryCode = document.getElementById("countrySelect").value;
-    const tabsContainer = document.getElementById("operatorTabs");
-    
-    if (!countryCode) {
-      tabsContainer.innerHTML = `<p class="muted">Please select a country first.</p>`;
-      return;
-    }
-
-    tabsContainer.innerHTML = `<p class="muted">Loading operators...</p>`;
-
-    try {
-      const data = await apiFetch(`/airtime/operators/${countryCode}`);
-      allOperators = data.operators || [];
-      
-      if (allOperators.length === 0) {
-        tabsContainer.innerHTML = `<p class="muted">No operators available for this country.</p>`;
-        return;
-      }
-
-      tabsContainer.innerHTML = allOperators.map(op => `
-        <button class="operator-tab" onclick="selectOperator('${op.id}', '${op.name}')">
-          ${op.name}
-        </button>
-      `).join('');
-
-    } catch (error) {
-      tabsContainer.innerHTML = `<p class="text-red-500">Failed to load operators: ${error.message}</p>`;
-    }
-  };
-
-  window.selectOperator = (id, name) => {
-    selectedOperator = { id, name };
-    document.querySelectorAll(".operator-tab").forEach(tab => {
-      if (tab.textContent.trim() === name) tab.classList.add("active");
-      else tab.classList.remove("active");
-    });
-  };
 
   window.setAmount = (amount) => {
     document.getElementById("amountInput").value = amount;
     updateAmount();
     document.querySelectorAll(".amount-pill").forEach(pill => {
-      pill.classList.toggle("active", pill.textContent === `$${amount}`);
+      pill.classList.toggle("active", Number(pill.textContent.replace(/[^\d]/g, "")) === amount);
     });
   };
 
   window.updateAmount = () => {
-    const amountUsd = parseFloat(document.getElementById("amountInput").value) || 0;
+    const amountNgn = Number(document.getElementById("amountInput").value);
     const priceBox = document.getElementById("priceBox");
     const totalCostNgn = document.getElementById("totalCostNgn");
 
-    if (amountUsd > 0) {
-      const ngnAmount = amountUsd * EXCHANGE_RATE;
-      totalCostNgn.textContent = `₦${ngnAmount.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`;
+    if (Number.isFinite(amountNgn) && amountNgn > 0 && airtimeMarkup !== null) {
+      const chargedAmount = Math.round(amountNgn * (1 + airtimeMarkup / 100));
+      totalCostNgn.textContent = `₦${chargedAmount.toLocaleString('en-NG')}`;
       priceBox.classList.remove("hidden");
     } else {
       priceBox.classList.add("hidden");
@@ -204,15 +159,17 @@
 
   document.getElementById("buyBtn").addEventListener("click", () => {
     const phone = document.getElementById("phoneNumber").value.trim();
-    const amount = parseFloat(document.getElementById("amountInput").value);
+    const amount = Number(document.getElementById("amountInput").value);
+    const network = document.getElementById("networkSelect").value;
     const errorEl = document.getElementById("formError");
 
-    if (!selectedOperator || !phone || !amount) {
-      errorEl.textContent = "Please select an operator and fill in all fields.";
+    if (!network || !phone || !Number.isFinite(amount) || amount < 50 || amount > 50000) {
+      errorEl.textContent = "Select a network, enter a valid phone number, and choose an amount from ₦50 to ₦50,000.";
       errorEl.classList.remove("hidden");
       return;
     }
 
+    errorEl.classList.add("hidden");
     document.getElementById("modalPhone").textContent = phone;
     document.getElementById("modalPrice").textContent = document.getElementById("totalCostNgn").textContent;
     document.getElementById("modalError").classList.add("hidden");
@@ -220,10 +177,11 @@
   });
 
   document.getElementById("confirmBuyBtn").addEventListener("click", async (e) => {
-    const btn = e.target;
+    const btn = e.currentTarget;
     const originalText = btn.textContent;
     const phone = document.getElementById("phoneNumber").value.trim();
-    const amountUsd = parseFloat(document.getElementById("amountInput").value);
+    const amount = Number(document.getElementById("amountInput").value);
+    const network = document.getElementById("networkSelect").value;
     const modalError = document.getElementById("modalError");
 
     btn.disabled = true;
@@ -234,9 +192,9 @@
       await apiFetch("/airtime/buy", {
         method: "POST",
         body: JSON.stringify({
-          operatorId: selectedOperator.id,
+          network,
           phone,
-          amountUsd,
+          amount,
         }),
       });
 
